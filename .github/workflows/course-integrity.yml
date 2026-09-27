@@ -28,6 +28,7 @@ jobs:
           node --check app.js
           node --check course-audit-fixes.js
           node --check course-enhancements.js
+          node --check textbook-enhancements.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
           node --check chemistry-lesson-content.js
@@ -40,3 +41,5 @@ jobs:
         run: node tests/integrity.mjs
       - name: Run full AQA three-subject audit
         run: node tests/full-audit.mjs
+      - name: Audit textbook diagrams and terminology
+        run: node tests/textbook-audit.mjs
