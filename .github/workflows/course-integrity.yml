@@ -21,15 +21,22 @@ jobs:
           node --check course-data.js
           node --check physics-spec-detail.js
           node --check biology-spec-detail.js
+          node --check chemistry-spec-detail.js
+          node --check spec-practical-sync.js
           node --check rich-content.js
           node --check question-bank.js
           node --check app.js
+          node --check course-audit-fixes.js
           node --check course-enhancements.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
+          node --check chemistry-lesson-content.js
           node --check lesson-sequences.js
           node --check revision-mode.js
           node --check physics-spec-ui.js
           node --check biology-spec-ui.js
-      - name: Validate course structure
+          node --check chemistry-spec-ui.js
+      - name: Validate existing course structure
         run: node tests/integrity.mjs
+      - name: Run full AQA three-subject audit
+        run: node tests/full-audit.mjs
