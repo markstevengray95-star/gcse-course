@@ -56,16 +56,23 @@ assert(physics.length===8, `Expected 8 Physics topics, found ${physics.length}.`
 assert(data.topics.find(t=>t.id==='p8')?.scope==='triple', 'P8 Space Physics must remain Separate Physics only.');
 
 const index = read('index.html');
-for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','course-data.js','rich-content.js','app.js','course-enhancements.js']){
+for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','course-data.js','rich-content.js','app.js','course-enhancements.js','lesson-sequences.js']){
   assert(index.includes(asset), `index.html does not reference ${asset}.`);
 }
 for(const tab of ['overview','lessons','textbook','practicals','activities','simulation','equations','exam','quiz','coach']){
   assert(index.includes(`data-tab="${tab}"`), `Missing topic tab: ${tab}.`);
 }
 
+const sequenceSource = read('lesson-sequences.js');
+for(const required of ['Retrieval starter','Teaching chunks','Guided practice','Independent practice','Exam challenge','Plenary / exit ticket','Required practical mastery']){
+  assert(sequenceSource.includes(required), `lesson-sequences.js missing required learning phase: ${required}.`);
+}
+assert(sequenceSource.includes('practicalRules'), 'Detailed practical rule bank is missing.');
+assert(sequenceSource.includes('promptRules'), 'Detailed lesson prompt rule bank is missing.');
+
 if(failures.length){
   console.error(`Integrity checks failed (${failures.length}):`);
   failures.forEach(f=>console.error(`- ${f}`));
   process.exit(1);
 }
-console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides.`);
+console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides, guided lesson sequence layer present.`);
