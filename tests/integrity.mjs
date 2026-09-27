@@ -1,0 +1,71 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+const root = new URL('../', import.meta.url);
+const read = name => fs.readFileSync(new URL(name, root), 'utf8');
+const context = {window:{},console};
+vm.createContext(context);
+vm.runInContext(read('course-data.js'), context, {filename:'course-data.js'});
+vm.runInContext(read('rich-content.js'), context, {filename:'rich-content.js'});
+
+const data = context.window.GCSE_COURSE_DATA;
+const rich = context.window.GCSE_RICH_CONTENT;
+const failures = [];
+const assert = (condition, message) => { if(!condition) failures.push(message); };
+
+assert(data && Array.isArray(data.topics), 'Course data did not load.');
+assert(data?.topics?.length === 25, `Expected 25 GCSE topics, found ${data?.topics?.length ?? 0}.`);
+assert(rich?.guides, 'Rich content guides did not load.');
+
+const ids = new Set();
+for(const topic of data.topics){
+  assert(!ids.has(topic.id), `Duplicate topic id: ${topic.id}`);
+  ids.add(topic.id);
+  assert(['biology','chemistry','physics'].includes(topic.subject), `${topic.id}: invalid subject.`);
+  assert([1,2].includes(topic.paper), `${topic.id}: invalid paper.`);
+  assert(['combined','triple'].includes(topic.scope), `${topic.id}: invalid scope.`);
+  assert(Array.isArray(topic.lessons) && topic.lessons.length > 0, `${topic.id}: no lessons.`);
+  for(const [name,scope] of topic.lessons || []){
+    assert(Boolean(name), `${topic.id}: lesson missing title.`);
+    assert(['combined','triple'].includes(scope), `${topic.id}: lesson '${name}' has invalid scope.`);
+  }
+  assert(Array.isArray(topic.quiz) && topic.quiz.length >= 3, `${topic.id}: retrieval quiz should have at least 3 questions.`);
+  const guide = rich.guides[topic.id];
+  assert(Boolean(guide), `${topic.id}: missing rich-content guide.`);
+  if(guide){
+    assert(Array.isArray(guide.textbook) && guide.textbook.length >= 3, `${topic.id}: needs at least 3 textbook sections.`);
+    assert(Array.isArray(guide.terms) && guide.terms.length >= 4, `${topic.id}: needs at least 4 key terms.`);
+    assert(guide.worked?.title && Array.isArray(guide.worked?.steps), `${topic.id}: worked example incomplete.`);
+    assert(guide.activity?.title && guide.activity?.task, `${topic.id}: activity incomplete.`);
+    assert(Boolean(guide.sim), `${topic.id}: missing simulation type.`);
+    assert(Array.isArray(guide.exam) && guide.exam.length >= 2, `${topic.id}: needs at least 2 exam questions.`);
+    for(const q of guide.exam || []){
+      assert(typeof q[0] === 'string' && q[0].length > 5, `${topic.id}: invalid exam question.`);
+      assert(Number.isFinite(q[1]) && q[1] > 0, `${topic.id}: invalid exam mark value.`);
+      assert(Array.isArray(q[2]) && q[2].length > 0, `${topic.id}: exam question missing mark points.`);
+    }
+  }
+}
+
+const biology = data.topics.filter(t=>t.subject==='biology');
+const chemistry = data.topics.filter(t=>t.subject==='chemistry');
+const physics = data.topics.filter(t=>t.subject==='physics');
+assert(biology.length===7, `Expected 7 Biology topics, found ${biology.length}.`);
+assert(chemistry.length===10, `Expected 10 Chemistry topics, found ${chemistry.length}.`);
+assert(physics.length===8, `Expected 8 Physics topics, found ${physics.length}.`);
+assert(data.topics.find(t=>t.id==='p8')?.scope==='triple', 'P8 Space Physics must remain Separate Physics only.');
+
+const index = read('index.html');
+for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','course-data.js','rich-content.js','app.js','course-enhancements.js']){
+  assert(index.includes(asset), `index.html does not reference ${asset}.`);
+}
+for(const tab of ['overview','lessons','textbook','practicals','activities','simulation','equations','exam','quiz','coach']){
+  assert(index.includes(`data-tab="${tab}"`), `Missing topic tab: ${tab}.`);
+}
+
+if(failures.length){
+  console.error(`Integrity checks failed (${failures.length}):`);
+  failures.forEach(f=>console.error(`- ${f}`));
+  process.exit(1);
+}
+console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides.`);
