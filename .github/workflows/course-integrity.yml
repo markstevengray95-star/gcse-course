@@ -24,6 +24,7 @@ jobs:
           node --check question-bank.js
           node --check app.js
           node --check course-enhancements.js
+          node --check physics-lesson-content.js
           node --check lesson-sequences.js
           node --check revision-mode.js
           node --check physics-spec-ui.js
