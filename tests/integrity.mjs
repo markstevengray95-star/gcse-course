@@ -7,6 +7,7 @@ const context = {window:{},console};
 vm.createContext(context);
 vm.runInContext(read('course-data.js'), context, {filename:'course-data.js'});
 vm.runInContext(read('rich-content.js'), context, {filename:'rich-content.js'});
+vm.runInContext(read('question-bank.js'), context, {filename:'question-bank.js'});
 
 const data = context.window.GCSE_COURSE_DATA;
 const rich = context.window.GCSE_RICH_CONTENT;
@@ -16,8 +17,10 @@ const assert = (condition, message) => { if(!condition) failures.push(message); 
 assert(data && Array.isArray(data.topics), 'Course data did not load.');
 assert(data?.topics?.length === 25, `Expected 25 GCSE topics, found ${data?.topics?.length ?? 0}.`);
 assert(rich?.guides, 'Rich content guides did not load.');
+assert(context.window.GCSE_EXTRA_QUESTION_BANK, 'Expanded question bank did not load.');
 
 const ids = new Set();
+let examQuestionCount = 0;
 for(const topic of data.topics){
   assert(!ids.has(topic.id), `Duplicate topic id: ${topic.id}`);
   ids.add(topic.id);
@@ -38,7 +41,8 @@ for(const topic of data.topics){
     assert(guide.worked?.title && Array.isArray(guide.worked?.steps), `${topic.id}: worked example incomplete.`);
     assert(guide.activity?.title && guide.activity?.task, `${topic.id}: activity incomplete.`);
     assert(Boolean(guide.sim), `${topic.id}: missing simulation type.`);
-    assert(Array.isArray(guide.exam) && guide.exam.length >= 2, `${topic.id}: needs at least 2 exam questions.`);
+    assert(Array.isArray(guide.exam) && guide.exam.length >= 5, `${topic.id}: needs at least 5 exam questions after loading the expanded bank.`);
+    examQuestionCount += guide.exam?.length || 0;
     for(const q of guide.exam || []){
       assert(typeof q[0] === 'string' && q[0].length > 5, `${topic.id}: invalid exam question.`);
       assert(Number.isFinite(q[1]) && q[1] > 0, `${topic.id}: invalid exam mark value.`);
@@ -54,9 +58,10 @@ assert(biology.length===7, `Expected 7 Biology topics, found ${biology.length}.`
 assert(chemistry.length===10, `Expected 10 Chemistry topics, found ${chemistry.length}.`);
 assert(physics.length===8, `Expected 8 Physics topics, found ${physics.length}.`);
 assert(data.topics.find(t=>t.id==='p8')?.scope==='triple', 'P8 Space Physics must remain Separate Physics only.');
+assert(examQuestionCount >= 125, `Expected at least 125 original exam-practice questions, found ${examQuestionCount}.`);
 
 const index = read('index.html');
-for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','course-data.js','rich-content.js','app.js','course-enhancements.js','lesson-sequences.js']){
+for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','course-data.js','rich-content.js','question-bank.js','app.js','course-enhancements.js','lesson-sequences.js']){
   assert(index.includes(asset), `index.html does not reference ${asset}.`);
 }
 for(const tab of ['overview','lessons','textbook','practicals','activities','simulation','equations','exam','quiz','coach']){
@@ -75,4 +80,4 @@ if(failures.length){
   failures.forEach(f=>console.error(`- ${f}`));
   process.exit(1);
 }
-console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides, guided lesson sequence layer present.`);
+console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides, ${examQuestionCount} exam-practice questions, guided lesson sequence layer present.`);
