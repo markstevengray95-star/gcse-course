@@ -8,10 +8,12 @@ vm.createContext(context);
 vm.runInContext(read('course-data.js'), context, {filename:'course-data.js'});
 vm.runInContext(read('physics-spec-detail.js'), context, {filename:'physics-spec-detail.js'});
 vm.runInContext(read('rich-content.js'), context, {filename:'rich-content.js'});
+vm.runInContext(read('physics-lesson-content.js'), context, {filename:'physics-lesson-content.js'});
 vm.runInContext(read('question-bank.js'), context, {filename:'question-bank.js'});
 
 const data = context.window.GCSE_COURSE_DATA;
 const physicsSpec = context.window.GCSE_PHYSICS_SPEC_DETAIL;
+const physicsLessonContent = context.window.GCSE_PHYSICS_LESSON_CONTENT;
 const rich = context.window.GCSE_RICH_CONTENT;
 const failures = [];
 const assert = (condition, message) => { if(!condition) failures.push(message); };
@@ -19,6 +21,7 @@ const assert = (condition, message) => { if(!condition) failures.push(message); 
 assert(data && Array.isArray(data.topics), 'Course data did not load.');
 assert(data?.topics?.length === 25, `Expected 25 GCSE topics, found ${data?.topics?.length ?? 0}.`);
 assert(physicsSpec?.topics, 'Detailed AQA Physics specification map did not load.');
+assert(physicsLessonContent?.rules, 'Lesson-specific Physics teaching content did not load.');
 assert(rich?.guides, 'Rich content guides did not load.');
 assert(context.window.GCSE_EXTRA_QUESTION_BANK, 'Expanded question bank did not load.');
 
@@ -63,7 +66,6 @@ assert(physics.length===8, `Expected 8 Physics topics, found ${physics.length}.`
 assert(data.topics.find(t=>t.id==='p8')?.scope==='triple', 'P8 Space Physics must remain Separate Physics only.');
 assert(examQuestionCount >= 125, `Expected at least 125 original exam-practice questions, found ${examQuestionCount}.`);
 
-// AQA GCSE Physics 8463 structure: Topics 4.1–4.4 on Paper 1 and 4.5–4.8 on Paper 2.
 const expectedPhysics = [
   ['p1','4.1','Energy',1],
   ['p2','4.2','Electricity',1],
@@ -109,12 +111,25 @@ assert(physicsLessonCount>=100, `Expected at least 100 detailed Physics lesson e
 assert(physicsOnlyCount>=20, `Expected substantial Physics-only coverage, found ${physicsOnlyCount} lessons.`);
 assert(higherCount>=15, `Expected substantial Higher Tier labelling, found ${higherCount} lessons.`);
 assert(practicalLinkedCount>=10, `Expected all Physics required practical links, found ${practicalLinkedCount}.`);
+assert(physicsLessonContent.rules.length>=50, `Expected a substantial lesson-specific Physics teaching rule bank, found ${physicsLessonContent.rules.length}.`);
+
+const forceTopic=data.topics.find(t=>t.id==='p5');
+const forceTitle="Newton's Second Law and inertial mass";
+const forceIndex=forceTopic.lessons.findIndex(([name])=>name===forceTitle);
+const forceLesson=rich.getLesson(forceTopic,forceTitle,forceIndex);
+assert(forceLesson?.physicsMeta?.ref==='4.5.6.2.2', 'Newton Second Law lesson is not linked to AQA 4.5.6.2.2.');
+assert(forceLesson?.depth?.explanation?.includes('resultant force'), 'Newton Second Law lesson does not receive lesson-specific teaching detail.');
+assert(forceLesson?.depth?.misconception, 'Physics lesson is missing a lesson-specific misconception.');
+assert(forceLesson?.depth?.application, 'Physics lesson is missing a lesson-specific application task.');
+assert(forceLesson?.examTip?.includes('AQA 4.5.6.2.2'), 'Physics lesson exam guidance does not include its AQA reference.');
 
 const index = read('index.html');
-for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','revision-mode.css','physics-spec-detail.css','course-data.js','physics-spec-detail.js','rich-content.js','question-bank.js','app.js','course-enhancements.js','lesson-sequences.js','revision-mode.js','physics-spec-ui.js']){
+for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','revision-mode.css','physics-spec-detail.css','course-data.js','physics-spec-detail.js','rich-content.js','question-bank.js','app.js','course-enhancements.js','physics-lesson-content.js','lesson-sequences.js','revision-mode.js','physics-spec-ui.js']){
   assert(index.includes(asset), `index.html does not reference ${asset}.`);
 }
 assert(index.indexOf('physics-spec-detail.js') < index.indexOf('rich-content.js'), 'Physics specification data must load before rich-content.js.');
+assert(index.indexOf('course-enhancements.js') < index.indexOf('physics-lesson-content.js'), 'Physics lesson detail should load after general course enhancements.');
+assert(index.indexOf('physics-lesson-content.js') < index.indexOf('lesson-sequences.js'), 'Physics lesson detail must load before guided lesson sequences are generated.');
 assert(index.indexOf('physics-spec-ui.js') > index.indexOf('revision-mode.js'), 'Physics specification UI should load after the core enhancement layers.');
 for(const tab of ['overview','lessons','textbook','practicals','activities','simulation','equations','exam','quiz','coach']){
   assert(index.includes(`data-tab="${tab}"`), `Missing topic tab: ${tab}.`);
@@ -144,4 +159,4 @@ if(failures.length){
   failures.forEach(f=>console.error(`- ${f}`));
   process.exit(1);
 }
-console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${physicsLessonCount} detailed AQA Physics lessons, ${Object.keys(rich.guides).length} rich guides, ${examQuestionCount} exam-practice questions.`);
+console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${physicsLessonCount} detailed AQA Physics lessons, ${physicsLessonContent.rules.length} Physics teaching rules, ${Object.keys(rich.guides).length} rich guides, ${examQuestionCount} exam-practice questions.`);
