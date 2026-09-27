@@ -61,7 +61,7 @@ assert(data.topics.find(t=>t.id==='p8')?.scope==='triple', 'P8 Space Physics mus
 assert(examQuestionCount >= 125, `Expected at least 125 original exam-practice questions, found ${examQuestionCount}.`);
 
 const index = read('index.html');
-for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','course-data.js','rich-content.js','question-bank.js','app.js','course-enhancements.js','lesson-sequences.js']){
+for(const asset of ['styles.css','rich-learning.css','course-enhancements.css','lesson-sequences.css','revision-mode.css','course-data.js','rich-content.js','question-bank.js','app.js','course-enhancements.js','lesson-sequences.js','revision-mode.js']){
   assert(index.includes(asset), `index.html does not reference ${asset}.`);
 }
 for(const tab of ['overview','lessons','textbook','practicals','activities','simulation','equations','exam','quiz','coach']){
@@ -75,9 +75,16 @@ for(const required of ['Retrieval starter','Teaching chunks','Guided practice','
 assert(sequenceSource.includes('practicalRules'), 'Detailed practical rule bank is missing.');
 assert(sequenceSource.includes('promptRules'), 'Detailed lesson prompt rule bank is missing.');
 
+const revisionSource = read('revision-mode.js');
+for(const required of ['Practice tier','Mixed revision','Foundation practice','Higher practice','Mastery:','gcse-science-mixed-revision-history-v1']){
+  assert(revisionSource.includes(required), `revision-mode.js missing required feature text: ${required}.`);
+}
+assert(revisionSource.includes('source:\'mixed-revision\''), 'Mixed revision attempts are not linked to mastery tracking.');
+assert(revisionSource.includes('filter(matchesTier)'), 'Practice tier filter is not applied to question selection.');
+
 if(failures.length){
   console.error(`Integrity checks failed (${failures.length}):`);
   failures.forEach(f=>console.error(`- ${f}`));
   process.exit(1);
 }
-console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides, ${examQuestionCount} exam-practice questions, guided lesson sequence layer present.`);
+console.log(`GCSE course integrity checks passed: ${data.topics.length} topics, ${data.topics.reduce((n,t)=>n+t.lessons.length,0)} lesson entries, ${Object.keys(rich.guides).length} rich guides, ${examQuestionCount} exam-practice questions, guided lessons and mixed revision present.`);
