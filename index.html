@@ -4,10 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07111f">
-  <meta name="description" content="Unified AQA GCSE Science course for Biology, Chemistry and Physics, covering Combined Science and Separate Science content.">
+  <meta name="description" content="Unified AQA GCSE Science course for Biology, Chemistry and Physics, covering Combined Science and Separate Science content with lessons, textbook content, practicals, simulations and exam practice.">
   <title>AQA GCSE Science Course</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="rich-learning.css">
 </head>
 <body>
 <header class="topbar">
@@ -29,7 +30,7 @@
       <div>
         <span class="eyebrow">AQA GCSE Science</span>
         <h1>Your complete GCSE Science course.</h1>
-        <p>Work through Biology, Chemistry and Physics in one place. Switch between Combined Science and Separate/Triple Science, track progress, complete lesson checklists, required practicals and retrieval questions.</p>
+        <p>Learn Biology, Chemistry and Physics in one place with structured lessons, textbook teaching, worked examples, diagrams, practicals, interactive models, exam practice and progress tracking.</p>
       </div>
       <div class="hero-actions">
         <button class="button primary" id="continueButton" type="button">Continue learning</button>
@@ -112,7 +113,11 @@
     <nav class="content-tabs" id="contentTabs" aria-label="Topic sections">
       <button type="button" data-tab="overview" class="active">Overview</button>
       <button type="button" data-tab="lessons">Lessons</button>
+      <button type="button" data-tab="textbook">Textbook</button>
       <button type="button" data-tab="practicals">Required practicals</button>
+      <button type="button" data-tab="activities">Activities</button>
+      <button type="button" data-tab="simulation">Simulation</button>
+      <button type="button" data-tab="exam">Exam practice</button>
       <button type="button" data-tab="quiz">Retrieval quiz</button>
     </nav>
 
@@ -142,6 +147,7 @@
 </div>
 
 <script src="course-data.js"></script>
+<script src="rich-content.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
