@@ -22,5 +22,6 @@ jobs:
           node --check rich-content.js
           node --check app.js
           node --check course-enhancements.js
+          node --check lesson-sequences.js
       - name: Validate course structure
         run: node tests/integrity.mjs
