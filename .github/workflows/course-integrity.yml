@@ -20,6 +20,7 @@ jobs:
         run: |
           node --check course-data.js
           node --check rich-content.js
+          node --check question-bank.js
           node --check app.js
           node --check course-enhancements.js
           node --check lesson-sequences.js
