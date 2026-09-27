@@ -14,14 +14,10 @@
   <link rel="stylesheet" href="revision-mode.css">
   <link rel="stylesheet" href="physics-spec-detail.css">
   <link rel="stylesheet" href="biology-spec-detail.css">
+  <link rel="stylesheet" href="chemistry-spec-detail.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="wrap topbar-inner">
-    <button class="brand" id="homeButton" type="button" aria-label="Return to GCSE Science course home"><span class="brand-mark">S</span><span><strong>GCSE Science</strong><small>AQA · Biology · Chemistry · Physics</small></span></button>
-    <div class="top-progress"><span id="progressText">0 / 25 topics complete</span><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div></div>
-  </div>
-</header>
+<header class="topbar"><div class="wrap topbar-inner"><button class="brand" id="homeButton" type="button" aria-label="Return to GCSE Science course home"><span class="brand-mark">S</span><span><strong>GCSE Science</strong><small>AQA · Biology · Chemistry · Physics</small></span></button><div class="top-progress"><span id="progressText">0 / 25 topics complete</span><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div></div></div></header>
 <main class="wrap main">
   <section id="homeView">
     <section class="hero"><div><span class="eyebrow">AQA GCSE Science</span><h1>Your complete GCSE Science course.</h1><p>Learn Biology, Chemistry and Physics in one place with full guided lessons, textbook teaching, worked examples, diagrams, practical revision, interactive models, exam practice and progress tracking.</p></div><div class="hero-actions"><button class="button primary" id="continueButton" type="button">Continue learning</button><button class="button" id="randomQuestionButton" type="button">Quick retrieval</button><button class="button" id="notebookButton" type="button">Notebook</button></div></section>
@@ -29,7 +25,7 @@
     <section class="subject-tabs" id="subjectTabs" aria-label="Science subject filter"><button type="button" class="active" data-subject="all">All Science</button><button type="button" data-subject="biology">🧬 Biology</button><button type="button" data-subject="chemistry">⚗️ Chemistry</button><button type="button" data-subject="physics">⚡ Physics</button></section>
     <section class="course-summary" id="courseSummary"></section>
     <section><div class="section-head"><div><span class="eyebrow">Course map</span><h2 id="mapTitle">All GCSE Science topics</h2></div><span class="muted" id="resultCount"></span></div><div class="topic-grid" id="topicGrid"></div></section>
-    <section class="paper-map panel"><div class="section-head compact"><div><span class="eyebrow">Exam map</span><h2>What is assessed where?</h2></div></div><div class="paper-columns"><article><strong>Biology Paper 1</strong><p>Cell biology · Organisation · Infection and response · Bioenergetics</p></article><article><strong>Biology Paper 2</strong><p>Homeostasis and response · Inheritance, variation and evolution · Ecology</p></article><article><strong>Chemistry Paper 1</strong><p>Atomic structure · Bonding · Quantitative chemistry · Chemical changes · Energy changes</p></article><article><strong>Chemistry Paper 2</strong><p>Rate and extent · Organic chemistry · Chemical analysis · Atmosphere · Using resources</p></article><article><strong>Physics Paper 1</strong><p>Energy · Electricity · Particle model of matter · Atomic structure</p></article><article><strong>Physics Paper 2</strong><p>Forces · Waves · Magnetism and electromagnetism · Space physics (Physics only)</p></article></div></section>
+    <section class="paper-map panel"><div class="section-head compact"><div><span class="eyebrow">Exam map</span><h2>What is assessed where?</h2></div></div><div class="paper-columns"><article><strong>Biology Paper 1</strong><p>Cell biology · Organisation · Infection and response · Bioenergetics</p></article><article><strong>Biology Paper 2</strong><p>Homeostasis and response · Inheritance, variation and evolution · Ecology</p></article><article><strong>Chemistry Paper 1</strong><p>Atomic structure and periodic table · Bonding and structure · Quantitative chemistry · Chemical changes · Energy changes</p></article><article><strong>Chemistry Paper 2</strong><p>Rate and extent · Organic chemistry · Chemical analysis · Chemistry of atmosphere · Using resources</p></article><article><strong>Physics Paper 1</strong><p>Energy · Electricity · Particle model of matter · Atomic structure</p></article><article><strong>Physics Paper 2</strong><p>Forces · Waves · Magnetism and electromagnetism · Space physics (Physics only)</p></article></div></section>
   </section>
   <section id="topicView" hidden>
     <nav class="topic-toolbar panel" aria-label="Topic navigation"><button class="button" id="backButton" type="button">← Course home</button><button class="icon-button" id="previousTopic" type="button" aria-label="Previous topic">←</button><select id="topicSelect" aria-label="Change topic"></select><button class="icon-button" id="nextTopic" type="button" aria-label="Next topic">→</button><button class="button" id="topicNotebookButton" type="button">Notebook</button><button class="button primary" id="completeTopicButton" type="button">Mark topic complete</button></nav>
@@ -44,15 +40,18 @@
 <script src="course-data.js"></script>
 <script src="physics-spec-detail.js"></script>
 <script src="biology-spec-detail.js"></script>
+<script src="chemistry-spec-detail.js"></script>
 <script src="rich-content.js"></script>
 <script src="question-bank.js"></script>
 <script src="app.js"></script>
 <script src="course-enhancements.js"></script>
 <script src="physics-lesson-content.js"></script>
 <script src="biology-lesson-content.js"></script>
+<script src="chemistry-lesson-content.js"></script>
 <script src="lesson-sequences.js"></script>
 <script src="revision-mode.js"></script>
 <script src="physics-spec-ui.js"></script>
 <script src="biology-spec-ui.js"></script>
+<script src="chemistry-spec-ui.js"></script>
 </body>
 </html>
