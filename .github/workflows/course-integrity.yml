@@ -1,0 +1,26 @@
+name: GCSE Course Integrity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check course-data.js
+          node --check rich-content.js
+          node --check app.js
+          node --check course-enhancements.js
+      - name: Validate course structure
+        run: node tests/integrity.mjs
