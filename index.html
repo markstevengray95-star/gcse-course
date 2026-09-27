@@ -13,154 +13,46 @@
   <link rel="stylesheet" href="lesson-sequences.css">
   <link rel="stylesheet" href="revision-mode.css">
   <link rel="stylesheet" href="physics-spec-detail.css">
+  <link rel="stylesheet" href="biology-spec-detail.css">
 </head>
 <body>
 <header class="topbar">
   <div class="wrap topbar-inner">
-    <button class="brand" id="homeButton" type="button" aria-label="Return to GCSE Science course home">
-      <span class="brand-mark">S</span>
-      <span><strong>GCSE Science</strong><small>AQA · Biology · Chemistry · Physics</small></span>
-    </button>
-    <div class="top-progress">
-      <span id="progressText">0 / 25 topics complete</span>
-      <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
-    </div>
+    <button class="brand" id="homeButton" type="button" aria-label="Return to GCSE Science course home"><span class="brand-mark">S</span><span><strong>GCSE Science</strong><small>AQA · Biology · Chemistry · Physics</small></span></button>
+    <div class="top-progress"><span id="progressText">0 / 25 topics complete</span><div class="progress-track"><div id="progressFill" class="progress-fill"></div></div></div>
   </div>
 </header>
-
 <main class="wrap main">
   <section id="homeView">
-    <section class="hero">
-      <div>
-        <span class="eyebrow">AQA GCSE Science</span>
-        <h1>Your complete GCSE Science course.</h1>
-        <p>Learn Biology, Chemistry and Physics in one place with full guided lessons, textbook teaching, worked examples, diagrams, practical revision, interactive models, exam practice and progress tracking.</p>
-      </div>
-      <div class="hero-actions">
-        <button class="button primary" id="continueButton" type="button">Continue learning</button>
-        <button class="button" id="randomQuestionButton" type="button">Quick retrieval</button>
-        <button class="button" id="notebookButton" type="button">Notebook</button>
-      </div>
-    </section>
-
-    <section class="control-panel panel" aria-label="Course filters">
-      <div class="control-group">
-        <span class="control-label">Course</span>
-        <div class="segmented" id="courseMode">
-          <button type="button" data-mode="combined" class="active">Combined Science</button>
-          <button type="button" data-mode="triple">Separate / Triple</button>
-        </div>
-      </div>
-      <div class="control-group grow">
-        <label class="search-label" for="topicSearch">Find a topic or lesson</label>
-        <input id="topicSearch" type="search" placeholder="e.g. osmosis, electrolysis, forces…" autocomplete="off">
-      </div>
-      <div class="control-group">
-        <span class="control-label">Paper</span>
-        <select id="paperFilter" aria-label="Filter by exam paper">
-          <option value="all">All papers</option>
-          <option value="1">Paper 1</option>
-          <option value="2">Paper 2</option>
-        </select>
-      </div>
-    </section>
-
-    <section class="subject-tabs" id="subjectTabs" aria-label="Science subject filter">
-      <button type="button" class="active" data-subject="all">All Science</button>
-      <button type="button" data-subject="biology">🧬 Biology</button>
-      <button type="button" data-subject="chemistry">⚗️ Chemistry</button>
-      <button type="button" data-subject="physics">⚡ Physics</button>
-    </section>
-
+    <section class="hero"><div><span class="eyebrow">AQA GCSE Science</span><h1>Your complete GCSE Science course.</h1><p>Learn Biology, Chemistry and Physics in one place with full guided lessons, textbook teaching, worked examples, diagrams, practical revision, interactive models, exam practice and progress tracking.</p></div><div class="hero-actions"><button class="button primary" id="continueButton" type="button">Continue learning</button><button class="button" id="randomQuestionButton" type="button">Quick retrieval</button><button class="button" id="notebookButton" type="button">Notebook</button></div></section>
+    <section class="control-panel panel" aria-label="Course filters"><div class="control-group"><span class="control-label">Course</span><div class="segmented" id="courseMode"><button type="button" data-mode="combined" class="active">Combined Science</button><button type="button" data-mode="triple">Separate / Triple</button></div></div><div class="control-group grow"><label class="search-label" for="topicSearch">Find a topic or lesson</label><input id="topicSearch" type="search" placeholder="e.g. osmosis, electrolysis, forces…" autocomplete="off"></div><div class="control-group"><span class="control-label">Paper</span><select id="paperFilter" aria-label="Filter by exam paper"><option value="all">All papers</option><option value="1">Paper 1</option><option value="2">Paper 2</option></select></div></section>
+    <section class="subject-tabs" id="subjectTabs" aria-label="Science subject filter"><button type="button" class="active" data-subject="all">All Science</button><button type="button" data-subject="biology">🧬 Biology</button><button type="button" data-subject="chemistry">⚗️ Chemistry</button><button type="button" data-subject="physics">⚡ Physics</button></section>
     <section class="course-summary" id="courseSummary"></section>
-
-    <section>
-      <div class="section-head">
-        <div><span class="eyebrow">Course map</span><h2 id="mapTitle">All GCSE Science topics</h2></div>
-        <span class="muted" id="resultCount"></span>
-      </div>
-      <div class="topic-grid" id="topicGrid"></div>
-    </section>
-
-    <section class="paper-map panel">
-      <div class="section-head compact"><div><span class="eyebrow">Exam map</span><h2>What is assessed where?</h2></div></div>
-      <div class="paper-columns">
-        <article><strong>Biology Paper 1</strong><p>Cell biology · Organisation · Infection and response · Bioenergetics</p></article>
-        <article><strong>Biology Paper 2</strong><p>Homeostasis and response · Inheritance, variation and evolution · Ecology</p></article>
-        <article><strong>Chemistry Paper 1</strong><p>Atomic structure · Bonding · Quantitative chemistry · Chemical changes · Energy changes</p></article>
-        <article><strong>Chemistry Paper 2</strong><p>Rate and extent · Organic chemistry · Chemical analysis · Atmosphere · Using resources</p></article>
-        <article><strong>Physics Paper 1</strong><p>Energy · Electricity · Particle model of matter · Atomic structure</p></article>
-        <article><strong>Physics Paper 2</strong><p>Forces · Waves · Magnetism and electromagnetism · Space physics (Physics only)</p></article>
-      </div>
-    </section>
+    <section><div class="section-head"><div><span class="eyebrow">Course map</span><h2 id="mapTitle">All GCSE Science topics</h2></div><span class="muted" id="resultCount"></span></div><div class="topic-grid" id="topicGrid"></div></section>
+    <section class="paper-map panel"><div class="section-head compact"><div><span class="eyebrow">Exam map</span><h2>What is assessed where?</h2></div></div><div class="paper-columns"><article><strong>Biology Paper 1</strong><p>Cell biology · Organisation · Infection and response · Bioenergetics</p></article><article><strong>Biology Paper 2</strong><p>Homeostasis and response · Inheritance, variation and evolution · Ecology</p></article><article><strong>Chemistry Paper 1</strong><p>Atomic structure · Bonding · Quantitative chemistry · Chemical changes · Energy changes</p></article><article><strong>Chemistry Paper 2</strong><p>Rate and extent · Organic chemistry · Chemical analysis · Atmosphere · Using resources</p></article><article><strong>Physics Paper 1</strong><p>Energy · Electricity · Particle model of matter · Atomic structure</p></article><article><strong>Physics Paper 2</strong><p>Forces · Waves · Magnetism and electromagnetism · Space physics (Physics only)</p></article></div></section>
   </section>
-
   <section id="topicView" hidden>
-    <nav class="topic-toolbar panel" aria-label="Topic navigation">
-      <button class="button" id="backButton" type="button">← Course home</button>
-      <button class="icon-button" id="previousTopic" type="button" aria-label="Previous topic">←</button>
-      <select id="topicSelect" aria-label="Change topic"></select>
-      <button class="icon-button" id="nextTopic" type="button" aria-label="Next topic">→</button>
-      <button class="button" id="topicNotebookButton" type="button">Notebook</button>
-      <button class="button primary" id="completeTopicButton" type="button">Mark topic complete</button>
-    </nav>
-
-    <section class="topic-hero" id="topicHero">
-      <div>
-        <div class="topic-meta" id="topicMeta"></div>
-        <h1 id="topicTitle"></h1>
-        <p id="topicSummary"></p>
-      </div>
-      <div class="topic-stat" id="topicStat"></div>
-    </section>
-
-    <nav class="content-tabs" id="contentTabs" aria-label="Topic sections">
-      <button type="button" data-tab="overview" class="active">Overview</button>
-      <button type="button" data-tab="lessons">Lessons</button>
-      <button type="button" data-tab="textbook">Textbook</button>
-      <button type="button" data-tab="practicals">Required practicals</button>
-      <button type="button" data-tab="activities">Activities</button>
-      <button type="button" data-tab="simulation">Simulation</button>
-      <button type="button" data-tab="equations">Equations & Maths</button>
-      <button type="button" data-tab="exam">Exam practice</button>
-      <button type="button" data-tab="quiz">Retrieval quiz</button>
-      <button type="button" data-tab="coach">Progress Coach</button>
-    </nav>
-
+    <nav class="topic-toolbar panel" aria-label="Topic navigation"><button class="button" id="backButton" type="button">← Course home</button><button class="icon-button" id="previousTopic" type="button" aria-label="Previous topic">←</button><select id="topicSelect" aria-label="Change topic"></select><button class="icon-button" id="nextTopic" type="button" aria-label="Next topic">→</button><button class="button" id="topicNotebookButton" type="button">Notebook</button><button class="button primary" id="completeTopicButton" type="button">Mark topic complete</button></nav>
+    <section class="topic-hero" id="topicHero"><div><div class="topic-meta" id="topicMeta"></div><h1 id="topicTitle"></h1><p id="topicSummary"></p></div><div class="topic-stat" id="topicStat"></div></section>
+    <nav class="content-tabs" id="contentTabs" aria-label="Topic sections"><button type="button" data-tab="overview" class="active">Overview</button><button type="button" data-tab="lessons">Lessons</button><button type="button" data-tab="textbook">Textbook</button><button type="button" data-tab="practicals">Required practicals</button><button type="button" data-tab="activities">Activities</button><button type="button" data-tab="simulation">Simulation</button><button type="button" data-tab="equations">Equations & Maths</button><button type="button" data-tab="exam">Exam practice</button><button type="button" data-tab="quiz">Retrieval quiz</button><button type="button" data-tab="coach">Progress Coach</button></nav>
     <section id="topicContent" class="topic-content"></section>
   </section>
 </main>
-
-<aside class="notebook" id="notebook" aria-hidden="true">
-  <div class="notebook-head">
-    <div><span class="eyebrow">Across the whole course</span><h2>Science notebook</h2></div>
-    <button class="icon-button" id="closeNotebook" type="button" aria-label="Close notebook">×</button>
-  </div>
-  <p class="muted" id="notebookContext">Save definitions, calculations, practical reminders and exam tips.</p>
-  <textarea id="notebookInput" rows="5" maxlength="5000" placeholder="Write a note…"></textarea>
-  <button class="button primary full" id="saveNote" type="button">Save note</button>
-  <div class="notes-list" id="notesList"></div>
-</aside>
+<aside class="notebook" id="notebook" aria-hidden="true"><div class="notebook-head"><div><span class="eyebrow">Across the whole course</span><h2>Science notebook</h2></div><button class="icon-button" id="closeNotebook" type="button" aria-label="Close notebook">×</button></div><p class="muted" id="notebookContext">Save definitions, calculations, practical reminders and exam tips.</p><textarea id="notebookInput" rows="5" maxlength="5000" placeholder="Write a note…"></textarea><button class="button primary full" id="saveNote" type="button">Save note</button><div class="notes-list" id="notesList"></div></aside>
 <div class="backdrop" id="backdrop" hidden></div>
-
-<div class="retrieval-modal" id="retrievalModal" hidden role="dialog" aria-modal="true" aria-labelledby="retrievalTitle">
-  <div class="retrieval-card panel">
-    <div class="retrieval-head"><div><span class="eyebrow">Quick retrieval</span><h2 id="retrievalTitle">Question</h2></div><button class="icon-button" id="closeRetrieval" type="button">×</button></div>
-    <p class="retrieval-question" id="retrievalQuestion"></p>
-    <div id="retrievalAnswer" class="retrieval-answer" hidden></div>
-    <div class="retrieval-actions"><button class="button" id="showAnswer" type="button">Show answer</button><button class="button primary" id="anotherQuestion" type="button">Another question</button></div>
-  </div>
-</div>
-
+<div class="retrieval-modal" id="retrievalModal" hidden role="dialog" aria-modal="true" aria-labelledby="retrievalTitle"><div class="retrieval-card panel"><div class="retrieval-head"><div><span class="eyebrow">Quick retrieval</span><h2 id="retrievalTitle">Question</h2></div><button class="icon-button" id="closeRetrieval" type="button">×</button></div><p class="retrieval-question" id="retrievalQuestion"></p><div id="retrievalAnswer" class="retrieval-answer" hidden></div><div class="retrieval-actions"><button class="button" id="showAnswer" type="button">Show answer</button><button class="button primary" id="anotherQuestion" type="button">Another question</button></div></div></div>
 <script src="course-data.js"></script>
 <script src="physics-spec-detail.js"></script>
+<script src="biology-spec-detail.js"></script>
 <script src="rich-content.js"></script>
 <script src="question-bank.js"></script>
 <script src="app.js"></script>
 <script src="course-enhancements.js"></script>
 <script src="physics-lesson-content.js"></script>
+<script src="biology-lesson-content.js"></script>
 <script src="lesson-sequences.js"></script>
 <script src="revision-mode.js"></script>
 <script src="physics-spec-ui.js"></script>
+<script src="biology-spec-ui.js"></script>
 </body>
 </html>
