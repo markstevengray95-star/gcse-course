@@ -38,7 +38,8 @@
     c1:[
       ['An atom has atomic number 17 and mass number 37. State the number of protons, neutrons and electrons in the neutral atom.',3,['17 protons','20 neutrons','17 electrons']],
       ['Explain why Group 1 metals become more reactive down the group.',4,['outer electron','further from nucleus','shielding','weaker attraction','lost more easily']],
-      ['Explain why noble gases are very unreactive.',2,['full outer shell','stable electron arrangement']]
+      ['Explain why noble gases are very unreactive.',2,['full outer shell','stable electron arrangement']],
+      ['Chlorine-35 and chlorine-37 are isotopes of chlorine. Explain what makes them isotopes of the same element.',3,['same proton number','different neutron number','same element']]
     ],
     c2:[
       ['Explain why sodium chloride has a high melting point and conducts electricity when molten but not when solid.',5,['giant ionic lattice','strong electrostatic attraction','energy needed','ions fixed solid','ions mobile molten']],
@@ -48,7 +49,8 @@
     c3:[
       ['Calculate the amount in moles in 11 g of carbon dioxide, CO₂. Mr = 44.',2,['0.25']],
       ['A solution contains 12 g of solute in 300 cm³. Calculate the concentration in g/dm³.',3,['40']],
-      ['Explain why the measured mass of a reaction mixture may decrease when a gas is produced in an open flask even though mass is conserved.',3,['gas escapes','open system','total mass including gas conserved']]
+      ['Explain why the measured mass of a reaction mixture may decrease when a gas is produced in an open flask even though mass is conserved.',3,['gas escapes','open system','total mass including gas conserved']],
+      ['A sample contains 0.50 mol of sodium chloride, NaCl. Mr of NaCl = 58.5. Calculate the mass of the sample.',2,['29.25']]
     ],
     c4:[
       ['Explain why aluminium is extracted using electrolysis rather than reduction with carbon.',3,['more reactive than carbon','cannot be displaced by carbon','electrolysis']],
