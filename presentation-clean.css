@@ -1,0 +1,253 @@
+/* Final presentation readability reset. Loaded last on purpose. */
+.lesson-presentation{
+  --clean-bg:#07111f;
+  --clean-slide:#0a1727;
+  --clean-card:#102238;
+  --clean-card-2:#142a43;
+  --clean-border:#38506a;
+  --clean-text:#f8fbff;
+  --clean-muted:#d6e2ee;
+  color:var(--clean-text)!important;
+  background:var(--clean-bg)!important;
+  border:1px solid #31465d!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.28)!important;
+}
+
+/* Keep the chrome compact so the slide is the focus. */
+.lesson-presentation .presentation-toolbar{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  gap:.8rem!important;
+  align-items:center!important;
+  padding:.7rem .9rem!important;
+  background:#081522!important;
+  border-bottom:1px solid #2a4057!important;
+}
+.lesson-presentation .presentation-toolbar .eyebrow{color:var(--deck-accent)!important;font-size:.7rem!important}
+.lesson-presentation .presentation-toolbar strong{color:#fff!important;font-size:.98rem!important}
+.lesson-presentation .presentation-toolbar-actions{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:.4rem!important;
+  overflow-x:auto!important;
+  max-width:min(52vw,700px)!important;
+  scrollbar-width:thin;
+}
+.lesson-presentation .presentation-toolbar-actions button{
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+  background:#10243a!important;
+  color:#f8fbff!important;
+  border:1px solid #3b536c!important;
+  border-radius:9px!important;
+  padding:.45rem .62rem!important;
+  font-size:.76rem!important;
+}
+
+/* A single clean slide canvas. */
+.lesson-presentation .presentation-stage{
+  background:#07111f!important;
+  min-height:min(680px,72vh)!important;
+}
+.lesson-presentation .presentation-slide{
+  width:100%!important;
+  max-width:1180px!important;
+  margin:0 auto!important;
+  box-sizing:border-box!important;
+  min-height:min(680px,72vh)!important;
+  padding:clamp(1.35rem,3vw,2.7rem)!important;
+  align-content:start!important;
+  gap:1.1rem!important;
+  background:linear-gradient(145deg,#0b1b2e 0%,#081420 58%,#07111f 100%)!important;
+  color:var(--clean-text)!important;
+  overflow:auto!important;
+}
+.lesson-presentation .presentation-slide[hidden]{display:none!important}
+
+/* Hard text contrast: later feature styles are not allowed to make text disappear. */
+.lesson-presentation .presentation-slide :is(h1,h2,h3,h4,h5,h6,strong,b,label,summary,legend){
+  color:#ffffff!important;
+  text-shadow:none!important;
+}
+.lesson-presentation .presentation-slide :is(p,li,dd,dt,small,span){
+  color:var(--clean-muted)!important;
+  text-shadow:none!important;
+}
+.lesson-presentation .presentation-slide .presentation-kicker,
+.lesson-presentation .presentation-slide .eyebrow,
+.lesson-presentation .presentation-slide .presentation-slide-heading small,
+.lesson-presentation .presentation-slide .presentation-term-grid strong{
+  color:var(--deck-accent)!important;
+}
+.lesson-presentation .presentation-slide-heading h2,
+.lesson-presentation .presentation-title-copy h2{
+  max-width:24ch!important;
+  font-size:clamp(1.9rem,3.2vw,3.15rem)!important;
+  line-height:1.08!important;
+  margin:.15rem 0 .45rem!important;
+}
+.lesson-presentation .presentation-lead,
+.lesson-presentation .presentation-title-copy p{
+  color:#edf5fc!important;
+  font-size:clamp(1.05rem,1.45vw,1.24rem)!important;
+  line-height:1.62!important;
+}
+.lesson-presentation .presentation-slide p,
+.lesson-presentation .presentation-slide li{
+  font-size:clamp(.98rem,1.1vw,1.08rem)!important;
+  line-height:1.58!important;
+}
+
+/* Flatten the accumulated white-box look into two consistent dark surfaces. */
+.lesson-presentation .presentation-slide :is(
+  article,
+  details,
+  .learn-card,
+  .teaching-chunk-card,
+  .chunk-check-card,
+  .spec-depth-card,
+  .spec-point-question,
+  .presentation-worked,
+  .presentation-practical,
+  .presentation-knowledge-check,
+  .mini-whiteboard,
+  .sequence-challenge,
+  .plenary-confidence,
+  .interactive-diagram-card,
+  .diagram-hotspot-info,
+  .cer-challenge,
+  .transfer-challenge,
+  .misconception-repair
+){
+  background:var(--clean-card)!important;
+  color:var(--clean-text)!important;
+  border:1px solid var(--clean-border)!important;
+  border-radius:14px!important;
+  box-shadow:none!important;
+}
+.lesson-presentation .presentation-slide :is(
+  .presentation-practice-grid article:nth-child(even),
+  .presentation-exam-grid article:nth-child(even),
+  .presentation-finish-grid article:nth-child(even),
+  .presentation-term-grid article:nth-child(even),
+  .spec-apply-grid article:nth-child(even)
+){background:var(--clean-card-2)!important}
+
+.lesson-presentation .presentation-bullets li,
+.lesson-presentation .presentation-spec-list li{
+  background:#102238!important;
+  border:1px solid #314a63!important;
+  color:#edf5fc!important;
+  box-shadow:none!important;
+}
+.lesson-presentation .presentation-bullets li:before,
+.lesson-presentation .presentation-spec-list li:before{color:var(--deck-accent)!important}
+
+.lesson-presentation .presentation-callout,
+.lesson-presentation .whiteboard-model{
+  background:#0d2236!important;
+  color:#f8fbff!important;
+  border:1px solid color-mix(in srgb,var(--deck-accent) 56%,#38506a)!important;
+  border-left:4px solid var(--deck-accent)!important;
+  border-radius:12px!important;
+  box-shadow:none!important;
+}
+.lesson-presentation .presentation-warning{
+  background:#32250f!important;
+  border:1px solid #8d672d!important;
+  color:#fff7df!important;
+}
+.lesson-presentation .presentation-warning :is(p,li,small,span){color:#ffebbb!important}
+
+/* Diagrams get their own clearly bounded stage rather than another pale card. */
+.lesson-presentation .presentation-diagram,
+.lesson-presentation .presentation-fallback-visual,
+.lesson-presentation .interactive-diagram-canvas{
+  background:#06101b!important;
+  border:1px solid #38506a!important;
+  border-radius:16px!important;
+  color:#edf6ff!important;
+  box-shadow:none!important;
+}
+.lesson-presentation svg text{fill:#f7fbff!important}
+.lesson-presentation .science-real-diagram{color:#eef6ff!important}
+
+/* Form controls must never become white-on-white. */
+.lesson-presentation :is(input,textarea,select){
+  background:#06101b!important;
+  color:#ffffff!important;
+  border:1px solid #49627d!important;
+  border-radius:10px!important;
+  box-shadow:none!important;
+}
+.lesson-presentation :is(input,textarea)::placeholder{color:#a9bbcd!important;opacity:1!important}
+.lesson-presentation select option{background:#07111f!important;color:#fff!important}
+.lesson-presentation button{
+  color:#f8fbff!important;
+}
+.lesson-presentation .knowledge-options button,
+.lesson-presentation .diagram-label-bank button,
+.lesson-presentation .sequence-item{
+  background:#102238!important;
+  color:#f8fbff!important;
+  border-color:#3b536c!important;
+}
+.lesson-presentation .knowledge-options button.correct{background:#123827!important;border-color:#5ee19b!important}
+.lesson-presentation .knowledge-options button.wrong{background:#3a1721!important;border-color:#ff8596!important}
+
+/* Make grids calmer: two columns max on a classroom screen, one column on smaller screens. */
+.lesson-presentation :is(.presentation-term-grid,.presentation-practice-grid,.presentation-exam-grid,.presentation-finish-grid,.spec-apply-grid,.dual-representation>div){
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:.8rem!important;
+}
+.lesson-presentation .presentation-spec-list{grid-template-columns:1fr!important}
+.lesson-presentation .presentation-teach-grid,
+.lesson-presentation .spec-teaching-layout,
+.lesson-presentation .interactive-diagram-main,
+.lesson-presentation .complete-coverage-layout{
+  gap:1rem!important;
+}
+
+/* QA/development controls should not clutter a normal student presentation. */
+.lesson-presentation.student-mode .presentation-toolbar-actions :is(.lesson-qa-badge,.lesson-evidence-badge,.lesson-specificity-badge),
+.lesson-card:has(.lesson-presentation.student-mode) > :is(.lesson-qa-detail,.lesson-evidence-detail,.lesson-specificity-detail){
+  display:none!important;
+}
+
+/* Bottom navigation is visually quiet and always readable. */
+.lesson-presentation .presentation-bottom{
+  background:#081522!important;
+  border-top:1px solid #2a4057!important;
+  padding:.65rem .85rem!important;
+}
+.lesson-presentation .presentation-bottom>button{
+  background:#10243a!important;
+  border:1px solid #3b536c!important;
+  color:#fff!important;
+}
+.lesson-presentation .presentation-count{color:#dce8f4!important;opacity:1!important}
+.lesson-presentation .presentation-keyboard-hint{background:#07111f!important;color:#a9bbcd!important;opacity:1!important}
+
+/* Fullscreen should look like a real presentation, not a stack of panels. */
+.lesson-presentation:fullscreen{
+  background:#07111f!important;
+  border:0!important;
+}
+.lesson-presentation:fullscreen .presentation-slide{
+  max-width:1320px!important;
+  padding:clamp(2rem,4vw,4rem)!important;
+}
+
+@media(max-width:900px){
+  .lesson-presentation .presentation-toolbar{grid-template-columns:1fr!important}
+  .lesson-presentation .presentation-toolbar-actions{max-width:100%!important;width:100%!important}
+  .lesson-presentation :is(.presentation-term-grid,.presentation-practice-grid,.presentation-exam-grid,.presentation-finish-grid,.spec-apply-grid,.dual-representation>div){grid-template-columns:1fr!important}
+  .lesson-presentation .presentation-slide{min-height:auto!important;padding:1.1rem!important}
+}
+
+@media(prefers-contrast:more){
+  .lesson-presentation .presentation-slide :is(p,li,dd,dt,small,span){color:#ffffff!important}
+  .lesson-presentation .presentation-slide :is(article,details,.teaching-chunk-card,.chunk-check-card,.spec-depth-card,.spec-point-question){border-color:#86a0bb!important}
+}
