@@ -28,10 +28,13 @@ for(const token of [
   'presentation-full-notes',
   'GCSE_LESSON_PRESENTATION_CATALOG',
   'GCSE_SCIENCE_DIAGRAMS',
+  'GCSE_LESSON_VISUALS',
   'GCSE_COURSE_POLISH?.addNote',
   "e.key==='ArrowRight'",
   "e.key==='ArrowLeft'",
-  'm.specificationPoints.forEach',
+  'm.teachingUnits||m.specificationPoints',
+  "type:'specpoint'",
+  "type:'specapply'",
   'm.keyTerms',
   'm.workedExample',
   'm.equations',
@@ -40,7 +43,7 @@ for(const token of [
   'm.skills'
 ]) assert(src.includes(token),`presentation-lessons.js missing ${token}`);
 
-for(const token of ['objectives:focus','specificationPoints:specPoints','equations:[...(coverage?.equations','practical:coverage?.practical','examTip','misconception','independentPractice','plenary']){
+for(const token of ['objectives:focus','specificationPoints:rawSpecPoints','model.specificationPoints=model.teachingUnits','teachingUnits','equations:[...(coverage?.equations','practical:coverage?.practical','examTip','misconception','independentPractice','plenary']){
   assert(catalog.includes(token),`lesson-presentation-catalog.js missing ${token}`);
 }
 
@@ -62,4 +65,4 @@ if(failures.length){
   failures.forEach(f=>console.error(`- ${f}`));
   process.exit(1);
 }
-console.log('Presentation lesson audit passed: variable lesson-specific decks retain AQA content, diagrams, fullscreen, notebook saving, keyboard navigation and full-notes fallback.');
+console.log('Presentation lesson audit passed: variable lesson-specific decks retain AQA content, Phase 3 teaching depth, Phase 4 lesson visuals, fullscreen, notebook saving, keyboard navigation and full-notes fallback.');
