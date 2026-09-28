@@ -45,6 +45,9 @@ jobs:
           node --check lesson-mode-plans.js
           node --check lesson-teacher-mode.js
           node --check lesson-student-mode.js
+          node --check lesson-notebook-organizer.js
+          node --check lesson-mastery-actions.js
+          node --check lesson-mastery-actions-ui.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
           node --check chemistry-lesson-content.js
@@ -103,3 +106,5 @@ jobs:
         run: node tests/lesson-overhaul-phase910-audit.mjs
       - name: Audit lesson overhaul phases 11 and 12
         run: node tests/lesson-overhaul-phase1112-audit.mjs
+      - name: Audit lesson overhaul phases 13 and 14
+        run: node tests/lesson-overhaul-phase1314-audit.mjs
