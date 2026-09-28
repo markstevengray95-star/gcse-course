@@ -92,6 +92,16 @@
     if(clean(model.practical))candidates.push({heading:'Required practical connection',body:`In ${model.title}, connect the scientific idea to the required practical: ${clean(model.practical)}`,source:'quality-enrichment-practical'});
     (model.objectives||[]).forEach((obj,i)=>candidates.push({heading:`AQA objective ${i+1}`,body:`For ${model.title}, the AQA focus is: ${clean(obj)}`,source:'quality-enrichment-objective'}));
     if(clean(model.examTip))candidates.push({heading:'Exam reasoning',body:`For ${model.title}, ${clean(model.examTip)}`,source:'quality-enrichment-exam'});
+    (model.teachingUnits||[]).forEach((u,i)=>{
+      const point=clean(u.text||u.definition||model.objectives?.[i]||model.title);
+      const example=clean(u.example||u.application||model.application);
+      const explanation=clean(u.explanation||model.coreExplanation);
+      const application=clean(u.application||model.application);
+      const misconception=clean(u.misconception||model.misconception);
+      candidates.push({heading:`AQA focus ${i+1} · evidence and example`,body:`In ${model.title}, “${point}” is illustrated by this lesson example: ${example}. Use the example as evidence when explaining the AQA point.`,source:'quality-enrichment-evidence'});
+      candidates.push({heading:`AQA focus ${i+1} · cause and effect`,body:`For ${model.title}, connect the AQA idea “${point}” to its consequence: ${application}. The scientific reasoning that links them is: ${explanation}`,source:'quality-enrichment-causal'});
+      candidates.push({heading:`AQA focus ${i+1} · correct the reasoning`,body:`In ${model.title}, avoid this misconception: ${misconception}. Replace it with the correct reasoning: ${explanation}`,source:'quality-enrichment-correction'});
+    });
     for(const candidate of candidates){
       if(chunks.length>=6)break;
       const body=compact(candidate.body),key=norm(body);if(!body||seen.has(key))continue;seen.add(key);
@@ -124,7 +134,7 @@
       reasoning,
       representations:representationsPair,
       languageFocus:languageFocus(model),
-      evidenceChallenge:`In ${model.title}, make a claim about “${clean(u1.text||model.title)}”. Support it with one observation, example, measurement or relationship from this lesson, then explain why that evidence supports the claim.`,
+      evidenceChallenge:`In ${model.topicCode} lesson ${model.lessonIndex+1}, ${model.title}, make a claim about “${clean(u1.text||model.title)}”. Support it with one observation, example, measurement or relationship from this lesson, then explain why that evidence supports the claim.`,
       misconceptionRepair:{incorrect:clean(u1.misconception||model.misconception),prompt:`Rewrite the misconception using the correct science from ${model.title}.`,model:clean(u1.explanation||model.coreExplanation)},
       transferChallenge:`Use the reasoning from ${model.title} to explain a different context involving ${clean(u2.text||u1.text||model.title)}. State what stays the same and what changes.`
     };
