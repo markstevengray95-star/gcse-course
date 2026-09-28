@@ -1,0 +1,220 @@
+.lesson-presentation{
+  --panel:#0b1727;
+  --border:rgba(170,196,226,.22);
+  --presentation-bg:#07111f;
+  --presentation-surface:#0d1d30;
+  --presentation-surface-2:#10253d;
+  --presentation-surface-3:#142c47;
+  --presentation-text:#f7fbff;
+  --presentation-muted:#c7d5e5;
+  --presentation-soft:#9fb3c8;
+  color:var(--presentation-text);
+  color-scheme:dark;
+  background:
+    radial-gradient(circle at 86% 6%,color-mix(in srgb,var(--deck-accent) 14%,transparent),transparent 29%),
+    linear-gradient(145deg,#0d2036 0%,#081522 52%,#050d17 100%);
+  border-color:rgba(184,207,233,.22);
+}
+.lesson-presentation.biology{--presentation-surface-2:#0d2a24;--presentation-surface-3:#12372e}
+.lesson-presentation.chemistry{--presentation-surface-2:#241b36;--presentation-surface-3:#312247}
+.lesson-presentation.physics{--presentation-surface-2:#10283d;--presentation-surface-3:#14344f}
+
+.lesson-presentation :is(h1,h2,h3,h4,h5,h6,strong,b,label,.presentation-question){color:var(--presentation-text)}
+.lesson-presentation :is(p,li,small,.presentation-lead){color:var(--presentation-muted)}
+.lesson-presentation .presentation-kicker,
+.lesson-presentation .presentation-slide-heading small,
+.lesson-presentation .presentation-term-grid strong,
+.lesson-presentation .teacher-prompt strong{color:var(--deck-accent)}
+
+.lesson-presentation .presentation-toolbar,
+.lesson-presentation .presentation-bottom{
+  background:rgba(5,14,25,.82);
+  border-color:rgba(184,207,233,.16);
+  backdrop-filter:blur(10px);
+}
+.lesson-presentation .presentation-toolbar-actions button,
+.lesson-presentation .presentation-bottom>button,
+.lesson-presentation .diagram-controls button,
+.lesson-presentation .worked-interactive-controls button,
+.lesson-presentation .sequence-check,
+.lesson-presentation .mini-whiteboard-actions button,
+.lesson-presentation .deep-actions button{
+  background:#12243a;
+  border-color:rgba(184,207,233,.26);
+  color:#f8fbff;
+  box-shadow:0 1px 0 rgba(255,255,255,.04) inset;
+}
+.lesson-presentation :is(.presentation-toolbar-actions button,.presentation-bottom>button,.diagram-controls button,.worked-interactive-controls button,.sequence-check,.mini-whiteboard-actions button,.deep-actions button):hover{
+  background:#19314d;
+  border-color:color-mix(in srgb,var(--deck-accent) 48%,rgba(184,207,233,.26));
+}
+.lesson-presentation :is(button,a,input,textarea,select):focus-visible{
+  outline:3px solid color-mix(in srgb,var(--deck-accent) 78%,white 22%);
+  outline-offset:2px;
+}
+
+.lesson-presentation .presentation-title-tags span,
+.lesson-presentation .presentation-bullets li,
+.lesson-presentation .presentation-spec-list li,
+.lesson-presentation .presentation-term-grid article,
+.lesson-presentation .presentation-worked,
+.lesson-presentation .presentation-practice-grid article,
+.lesson-presentation .presentation-exam-grid article,
+.lesson-presentation .presentation-finish-grid article,
+.lesson-presentation .presentation-practical,
+.lesson-presentation .interactive-diagram-card,
+.lesson-presentation .presentation-knowledge-check,
+.lesson-presentation .mini-whiteboard,
+.lesson-presentation .sequence-challenge,
+.lesson-presentation .plenary-confidence,
+.lesson-presentation .coverage-check-list label,
+.lesson-presentation .complete-coverage-layout aside article,
+.lesson-presentation .dual-representation article,
+.lesson-presentation .cer-challenge,
+.lesson-presentation .transfer-challenge,
+.lesson-presentation .misconception-repair,
+.lesson-presentation .lesson-specificity-detail,
+.lesson-presentation .lesson-evidence-detail,
+.lesson-presentation .topic-evidence-panel,
+.lesson-presentation .evidence-category-grid article,
+.lesson-presentation .qa-blockers article,
+.lesson-presentation .qa-priorities article,
+.lesson-presentation .qa-evidence-subjects article,
+.lesson-presentation .qa-band-strip span{
+  background:linear-gradient(145deg,var(--presentation-surface-2),var(--presentation-surface));
+  border-color:rgba(184,207,233,.2);
+  color:var(--presentation-text);
+  box-shadow:0 10px 24px rgba(0,0,0,.12),0 1px 0 rgba(255,255,255,.035) inset;
+}
+
+.lesson-presentation .presentation-bullets li:nth-child(even),
+.lesson-presentation .presentation-spec-list li:nth-child(even),
+.lesson-presentation .presentation-term-grid article:nth-child(even),
+.lesson-presentation .presentation-practice-grid article:nth-child(even),
+.lesson-presentation .presentation-exam-grid article:nth-child(even),
+.lesson-presentation .presentation-finish-grid article:nth-child(even){
+  background:linear-gradient(145deg,var(--presentation-surface-3),var(--presentation-surface));
+}
+
+.lesson-presentation .presentation-callout,
+.lesson-presentation .whiteboard-model{
+  background:linear-gradient(90deg,color-mix(in srgb,var(--deck-accent) 18%,#0b1727),#0b1727 68%);
+  border-color:var(--deck-accent);
+  color:var(--presentation-text);
+}
+.lesson-presentation .presentation-warning{
+  background:linear-gradient(145deg,#362713,#171a1f)!important;
+  border-color:rgba(255,199,105,.48)!important;
+}
+.lesson-presentation .presentation-warning :is(strong,h3,h4){color:#ffd88f}
+
+.lesson-presentation .presentation-diagram,
+.lesson-presentation .presentation-fallback-visual,
+.lesson-presentation .diagram-hotspot-info{
+  background:linear-gradient(155deg,#0b1a2b,#07111f);
+  border-color:rgba(184,207,233,.2);
+}
+.lesson-presentation .science-real-diagram{color:#e6f0fb}
+.lesson-presentation .science-real-diagram .diagram-bg{fill:rgba(6,15,27,.74)}
+
+.lesson-presentation .diagram-label-bank button,
+.lesson-presentation .knowledge-options button,
+.lesson-presentation .sequence-item{
+  background:#0f2136;
+  border-color:rgba(184,207,233,.2);
+  color:var(--presentation-text);
+}
+.lesson-presentation .diagram-label-bank button:hover,
+.lesson-presentation .knowledge-options button:hover,
+.lesson-presentation .sequence-item:hover{
+  background:#162c46;
+  border-color:color-mix(in srgb,var(--deck-accent) 42%,rgba(184,207,233,.2));
+}
+.lesson-presentation .knowledge-options button.correct{
+  background:#103325;
+  border-color:#59d590;
+  color:#effff7;
+}
+.lesson-presentation .knowledge-options button.wrong{
+  background:#351923;
+  border-color:#ff7f92;
+  color:#fff1f4;
+}
+.lesson-presentation .knowledge-feedback{
+  background:#0b1a2b;
+  border:1px solid rgba(184,207,233,.16);
+  color:var(--presentation-text);
+}
+
+.lesson-presentation :is(textarea,input[type="text"],input[type="number"],select){
+  background:#07111f;
+  color:#f8fbff;
+  border:1px solid rgba(184,207,233,.28);
+  caret-color:var(--deck-accent);
+}
+.lesson-presentation :is(textarea,input)::placeholder{color:#91a6bc;opacity:1}
+.lesson-presentation select option{background:#07111f;color:#f8fbff}
+.lesson-presentation code{
+  background:#050d17;
+  color:#f6fbff;
+  border-color:color-mix(in srgb,var(--deck-accent) 50%,rgba(184,207,233,.2));
+}
+
+.lesson-presentation .deep-understanding-panel{
+  --panel:#0a1727;
+  background:
+    linear-gradient(145deg,color-mix(in srgb,var(--deck-accent) 8%,#0d1d30),#091522 72%);
+  border:1px solid color-mix(in srgb,var(--deck-accent) 34%,rgba(184,207,233,.22));
+  color:var(--presentation-text);
+  box-shadow:0 18px 40px rgba(0,0,0,.16);
+}
+.lesson-presentation .reasoning-chain button{
+  background:#10233a;
+  border-color:rgba(184,207,233,.22);
+  color:var(--presentation-text);
+}
+.lesson-presentation .reasoning-chain button:hover{background:#18314d;border-color:var(--deck-accent)}
+.lesson-presentation .reasoning-chain button>span,
+.lesson-presentation .deep-version,
+.lesson-presentation .precision-language-strip span{
+  background:color-mix(in srgb,var(--deck-accent) 18%,#102033);
+  color:#f8fbff;
+  border:1px solid color-mix(in srgb,var(--deck-accent) 28%,transparent);
+}
+
+.lesson-presentation .lesson-evidence-detail,
+.lesson-presentation .topic-evidence-panel{
+  --panel:#0d1d30;
+  --border:rgba(184,207,233,.2);
+}
+.lesson-presentation .qa-meter{background:#06101c}
+.lesson-presentation .qa-gate-pill.pass{background:#103325;color:#c7ffe0;border:1px solid rgba(89,213,144,.4)}
+.lesson-presentation .qa-gate-pill.fail{background:#351923;color:#ffd6dc;border:1px solid rgba(255,127,146,.4)}
+
+.lesson-presentation .presentation-full-notes{
+  background:#081522;
+  border-color:rgba(184,207,233,.18);
+  color:var(--presentation-text);
+}
+.lesson-presentation .presentation-full-notes>summary{background:#0d1d30;color:#f7fbff}
+.lesson-presentation .presentation-dots span{background:#52667d}
+.lesson-presentation .presentation-dots button.active span{background:var(--deck-accent)}
+
+@media (prefers-contrast:more){
+  .lesson-presentation{border-color:#91a9c2}
+  .lesson-presentation :is(p,li,small,.presentation-lead){color:#eef5fc}
+  .lesson-presentation .presentation-bullets li,
+  .lesson-presentation .presentation-spec-list li,
+  .lesson-presentation .presentation-term-grid article,
+  .lesson-presentation .presentation-worked,
+  .lesson-presentation .presentation-practice-grid article,
+  .lesson-presentation .presentation-exam-grid article,
+  .lesson-presentation .presentation-finish-grid article,
+  .lesson-presentation .presentation-practical{border-color:#7891ab}
+}
+
+@media (max-width:650px){
+  .lesson-presentation .presentation-slide{background:transparent}
+  .lesson-presentation .presentation-bullets li,
+  .lesson-presentation .presentation-spec-list li{padding:.8rem .9rem .8rem 1.9rem}
+}
