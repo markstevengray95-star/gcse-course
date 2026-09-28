@@ -4,6 +4,7 @@
   const ratio=(value,target,max)=>clamp(target?value/target*max:0,max);
   const band=score=>score>=95?'Exemplary':score>=90?'Strong':score>=80?'Secure':score>=70?'Developing':'Priority review';
   const priorityFor=percent=>percent<70?'high':percent<85?'medium':percent<100?'low':'none';
+  const priorityRank={high:0,medium:1,low:2,none:3};
   const add=(cat,id,label,max,score,evidence,improve)=>{const earned=clamp(score,max);cat.items.push({id,label,max,earned,evidence:clean(evidence),improve:clean(improve)});cat.score+=earned;cat.max+=max;};
 
   function score(model,topic,allTopics=[]){
@@ -90,7 +91,7 @@
 
     const categories=Object.values(cats).map(c=>({...c,percent:c.max?Math.round(c.score/c.max*100):0,band:band(c.max?Math.round(c.score/c.max*100):0)}));
     const total=categories.reduce((n,c)=>n+c.score,0),max=categories.reduce((n,c)=>n+c.max,0),percent=max?Math.round(total/max*100):0;
-    const improvements=categories.flatMap(c=>c.items.filter(i=>i.earned<i.max).map(i=>({category:c.label,id:i.id,label:i.label,percent:i.max?Math.round(i.earned/i.max*100):0,priority:priorityFor(i.max?Math.round(i.earned/i.max*100):0),evidence:i.evidence,action:i.improve}))).sort((a,b)=>({high:0,medium:1,low:2,none:3}[a.priority]-({high:0,medium:1,low:2,none:3}[b.priority])||a.percent-b.percent);
+    const improvements=categories.flatMap(c=>c.items.filter(i=>i.earned<i.max).map(i=>({category:c.label,id:i.id,label:i.label,percent:i.max?Math.round(i.earned/i.max*100):0,priority:priorityFor(i.max?Math.round(i.earned/i.max*100):0),evidence:i.evidence,action:i.improve}))).sort((a,b)=>(priorityRank[a.priority]-priorityRank[b.priority])||a.percent-b.percent);
     return {lessonId:model.id,title:model.title,topicId:topic.id,subject:topic.subject,score:Math.round(total*10)/10,max,percent,band:band(percent),gatePassed:gate?.passed!==false,blockers:gate?.blockers||[],categories,improvements,topPriorities:improvements.slice(0,5)};
   }
 
