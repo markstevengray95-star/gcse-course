@@ -29,13 +29,10 @@ assert(equations>0&&equationLessons>0,'No equation-linked lessons were found.');
 assert(profiled>0,'No equations are receiving specialised Equation Coach profiles.');
 
 const visual=read('lesson-visual-interactions.js');
-for(const token of ['data-label-test','data-label-next','data-process-step','data-process-reset','Predict before reveal','data-visual-variable','requestFullscreen','data-visual-save','GCSE_COURSE_POLISH?.addNote','prefers-reduced-motion']){
-  if(token==='prefers-reduced-motion')continue;
-  assert(visual.includes(token),`lesson-visual-interactions.js missing ${token}`);
-}
+for(const token of ['data-label-test','data-label-next','data-process-step','data-process-reset','Predict before reveal','data-visual-variable','requestFullscreen','data-visual-save','GCSE_COURSE_POLISH?.addNote']) assert(visual.includes(token),`lesson-visual-interactions.js missing ${token}`);
 for(const kind of ['wave','circuit','particles','membrane','forces'])assert(visual.includes(kind),`Interactive visual model missing ${kind}.`);
 const ui=read('equation-coach-ui.js');
-for(const token of ['Equation Coach','slide-equationcoach','Symbols & units','Rearrange before numbers','Worked example','Scaffolded','Independent','Exam application','data-calc-next','data-unit-choice','data-equation-clickable','equation-coach']) assert(ui.includes(token),`equation-coach-ui.js missing ${token}`);
+for(const token of ['Equation Coach','slide-equationcoach','Symbols & units','Rearrange before numbers','Worked example','Scaffolded','Independent','Exam application','data-calc-next','data-unit-choice','equationClickable','equation-coach']) assert(ui.includes(token),`equation-coach-ui.js missing ${token}`);
 const css=read('lesson-overhaul-phase56.css');
 for(const token of ['.lesson-visual-controls','.visual-prediction','.visual-label-test','.visual-process-test','.visual-variable','.equation-coach-panel','.equation-route','.equation-symbols','.equation-practice-grid','.equation-coach-dialog','@media(prefers-reduced-motion:reduce)']) assert(css.includes(token),`lesson-overhaul-phase56.css missing ${token}`);
 const index=read('index.html');
