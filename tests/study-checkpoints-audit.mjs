@@ -29,7 +29,7 @@ assert(src.includes("state.activeTab==='lessons'"),'Resume logic should preserve
 assert(src.includes('resume.lessonTitle'),'Resume should preserve lesson identity by title, not only index.');
 assert(src.includes('focus[0]')&&src.includes('focus[1]'),'Checkpoint prompts should use lesson-specific specification focus points.');
 assert(src.includes('This is your own study confidence, not an exam grade.'),'Checkpoint must distinguish confidence from assessment grades.');
-assert(src.includes("state.activeTab==='coach'"),'Progress Coach should include checkpoint evidence.');
+assert(src.includes('injectCoachReviewSummary')&&src.includes('checkpoint-coach-panel')&&src.includes("state.activeTab!=='coach'"),'Progress Coach should include checkpoint evidence.');
 
 for(const cls of ['.resume-learning-card','.study-review-queue','.lesson-checkpoint','.checkpoint-confidence','.topic-confidence-summary','.lesson-confidence-pill','.coach-confidence-list']){
   assert(css.includes(cls),`study-checkpoints.css missing ${cls}`);
