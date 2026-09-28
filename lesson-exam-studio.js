@@ -73,7 +73,8 @@
         point('Substitute the values correctly and show the calculation.'),
         point('State the final answer with an appropriate unit.')
       ];
-      questions.splice(2,0,{id:'exam-calculate',section:'Calculation',command:'Calculate',marks:4,revisitType:'worked',prompt:calc?.exam||`Use ${eq} to solve an unfamiliar GCSE calculation. Show all working and give the final unit.`,marking:calcMarking,modelAnswer:modelAnswer(calcMarking)});
+      const scenario=calc?.exam||`Use ${eq} to solve an unfamiliar GCSE calculation.`;
+      questions.splice(2,0,{id:'exam-calculate',section:'Calculation',command:'Calculate',marks:4,revisitType:'worked',prompt:`Use the relationship ${eq} to answer this calculation problem: ${scenario} Show the equation, any rearrangement, substitution, complete working and the final unit.`,marking:calcMarking,modelAnswer:modelAnswer(calcMarking)});
     }
     return {
       id:`exam:${model.id}`,title:model.title,ref:model.ref,subject:model.subject,
