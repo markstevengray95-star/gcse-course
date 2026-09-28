@@ -14,3 +14,14 @@
   new MutationObserver(()=>requestAnimationFrame(scan)).observe(document.body,{childList:true,subtree:true});requestAnimationFrame(scan);
   window.GCSE_LESSON_SPECIFICITY_UI={scan,inject};
 })();
+
+// Presentation runtime guard: this file is intentionally loaded last in index.html,
+// so load the presentation visibility fallback after every other lesson/UI layer.
+(() => {
+  if(document.querySelector('script[data-presentation-runtime-fix]'))return;
+  const script=document.createElement('script');
+  script.src='presentation-runtime-fix.js';
+  script.dataset.presentationRuntimeFix='true';
+  script.addEventListener('error',()=>console.error('Could not load presentation runtime fix.'));
+  document.head.appendChild(script);
+})();
