@@ -10,12 +10,14 @@
   const subjectName=topic=>window.GCSE_COURSE_DATA?.subjects?.find(s=>s.id===topic.subject)?.name||topic.subject;
   const lessonData=(topic,title,index)=>window.GCSE_RICH_CONTENT?.getLesson?.(topic,title,index)||null;
 
-  function visualFor(topic,index,title){
+  function visualFor(topic,index,title,model=null,point=null){
+    const lessonVisual=window.GCSE_LESSON_VISUALS?.get?.(topic,title,model||{},point,index);
+    if(lessonVisual?.svg) return `<div class="presentation-diagram lesson-specific-presentation-visual" data-lesson-visual="${esc(lessonVisual.id)}">${lessonVisual.svg}<small>${esc(lessonVisual.title)}</small></div>`;
     const real=window.GCSE_SCIENCE_DIAGRAMS?.get?.(topic.id);
     if(real) return `<div class="presentation-diagram science-presentation-visual">${real.svg}<small>${esc(real.title)}</small></div>`;
     const textbook=window.GCSE_TEXTBOOK_ENHANCEMENTS;
     const plan=textbook?.diagramPlan?.[topic.id]||[];
-    if(!plan.length||typeof textbook?.visual!=='function') return `<div class="presentation-fallback-visual"><span>${topic.subject==='biology'?'🧬':topic.subject==='chemistry'?'⚗️':'⚡'}</span><strong>${esc(topic.title)}</strong></div>`;
+    if(!plan.length||typeof textbook?.visual!=='function') return `<div class="presentation-fallback-visual"><span>${topic.subject==='biology'?'🧬':topic.subject==='chemistry'?'⚗️':'⚡'}</span><strong>${esc(title)}</strong></div>`;
     const words=String(title||'').toLowerCase().split(/\W+/).filter(w=>w.length>3);
     const found=plan.find(([,label])=>words.some(w=>String(label).toLowerCase().includes(w)))||plan[index%plan.length];
     return `<div class="presentation-diagram">${textbook.visual(found[0],found[1])}<small>${esc(found[1])}</small></div>`;
@@ -28,19 +30,26 @@
     return {type:'chunkcheck',label:`Check ${index+1}`,html:`<div class="presentation-slide-heading"><span>C${index+1}</span><div><small>Check understanding · ${index+1}/${total}</small><h2>Stop and explain</h2></div></div><section class="chunk-check-card"><span class="eyebrow">Before moving on</span><h3>${esc(check.question)}</h3><p>Answer without looking back at the previous slide.</p><details><summary>Reveal model response</summary><p>${esc(check.answer)}</p></details></section><div class="presentation-callout"><strong>Decision point</strong><p>If you could not explain this clearly, revisit the previous teaching slide before continuing.</p></div>`};
   }
 
+  function pointTeachingSlides(topic,title,index,m,point,i){
+    const visual=visualFor(topic,index+i,title,m,point);
+    const teach={type:'specpoint',label:`AQA ${i+1} · Teach`,html:`<div class="presentation-slide-heading"><span>A${i+1}</span><div><small>AQA ${esc(m.ref)} · specification point ${point.index} · teach</small><h2>${esc(point.text)}</h2></div></div><div class="spec-teaching-layout"><div class="spec-teaching-copy"><article class="spec-depth-card"><span class="eyebrow">Definition</span><p><strong>${esc(point.definition)}</strong></p></article><article class="spec-depth-card"><span class="eyebrow">Explanation</span><p class="presentation-lead">${esc(point.explanation)}</p></article><article class="spec-depth-card"><span class="eyebrow">Example</span><p>${esc(point.example)}</p></article></div>${visual}</div>`};
+    const apply={type:'specapply',label:`AQA ${i+1} · Apply`,html:`<div class="presentation-slide-heading"><span>Q${i+1}</span><div><small>AQA ${esc(m.ref)} · apply and check</small><h2>Use the idea</h2></div></div><div class="spec-apply-grid"><article><span class="eyebrow">Application</span><p class="presentation-lead">${esc(point.application)}</p></article><article class="presentation-warning"><span class="eyebrow">Common misconception</span><p>${esc(point.misconception)}</p></article></div><section class="spec-point-question"><span class="eyebrow">Check understanding</span><h3>${esc(point.question)}</h3><p>Answer from memory before revealing the guidance.</p><details><summary>Reveal model response guidance</summary><p>${esc(point.explanation)}</p><p><strong>Exam focus:</strong> ${esc(point.guidance)}</p></details></section>`};
+    return [teach,apply];
+  }
+
   function slideDeck(topic,title,index,lesson){
     const catalog=window.GCSE_LESSON_PRESENTATION_CATALOG;
     const m=catalog?.build?.(topic,title,index,lesson);
     if(!m) return [];
     const slides=[];
-    slides.push({type:'title',label:'Start',html:`<div class="presentation-title-copy"><span class="presentation-kicker">${esc(topic.code)} · ${esc(subjectName(topic))} · AQA ${esc(m.ref)}</span><h2>${esc(m.title)}</h2><p>${esc(m.summary)}</p><div class="presentation-title-tags"><span>Lesson ${index+1}</span><span>${esc(m.duration)}</span>${m.tier==='higher'?'<span>Higher Tier</span>':''}${m.scope==='triple'?'<span>Separate Science</span>':''}</div><div class="lesson-standard-strip"><span>Retrieve</span><span>Teach</span><span>Check</span><span>Practise</span><span>Exam</span><span>Review</span></div></div>${visualFor(topic,index,title)}`});
+    slides.push({type:'title',label:'Start',html:`<div class="presentation-title-copy"><span class="presentation-kicker">${esc(topic.code)} · ${esc(subjectName(topic))} · AQA ${esc(m.ref)}</span><h2>${esc(m.title)}</h2><p>${esc(m.summary)}</p><div class="presentation-title-tags"><span>Lesson ${index+1}</span><span>${esc(m.duration)}</span>${m.tier==='higher'?'<span>Higher Tier</span>':''}${m.scope==='triple'?'<span>Separate Science</span>':''}</div><div class="lesson-standard-strip"><span>Retrieve</span><span>Teach</span><span>Check</span><span>Practise</span><span>Exam</span><span>Review</span></div></div>${visualFor(topic,index,title,m)}`});
 
     const starter=m.starter.length?m.starter:[{question:`What do you already know about ${title}?`,answer:m.coreExplanation},{question:'Which key term can you define from memory?',answer:m.keyTerms[0]?.[1]||m.coreExplanation}];
     slides.push({type:'retrieval',label:'Starter',html:`<div class="presentation-slide-heading"><span>01</span><div><small>Retrieval starter</small><h2>Activate prior knowledge</h2></div></div><div class="presentation-retrieval-grid">${starter.map((q,i)=>`<details><summary>${i+1}. ${esc(q.question)}</summary><p>${esc(q.answer||'Use your previous learning and explain your reasoning.')}</p></details>`).join('')}</div><div class="presentation-callout"><strong>Do this first</strong><p>Answer from memory before opening the model responses.</p></div>`});
 
     slides.push({type:'objectives',label:'Objectives',html:`<div class="presentation-slide-heading"><span>02</span><div><small>Learning objectives</small><h2>Everything this lesson must cover</h2></div></div>${list(m.objectives)}<div class="presentation-callout"><strong>AQA ${esc(m.ref)}</strong><p>${esc(m.section)} · By the end, you should be able to recall, explain and apply every point shown here.</p></div>`});
 
-    slides.push({type:'teach',label:'Big idea',html:`<div class="presentation-slide-heading"><span>03</span><div><small>Core concept</small><h2>The big idea</h2></div></div><div class="presentation-teach-grid"><div><p class="presentation-lead">${esc(m.coreExplanation)}</p><section><strong>Why this matters</strong><p>${esc(m.application)}</p></section></div>${visualFor(topic,index+1,title)}</div>`});
+    slides.push({type:'teach',label:'Big idea',html:`<div class="presentation-slide-heading"><span>03</span><div><small>Core concept</small><h2>The big idea</h2></div></div><div class="presentation-teach-grid"><div><p class="presentation-lead">${esc(m.coreExplanation)}</p><section><strong>Why this matters</strong><p>${esc(m.application)}</p></section></div>${visualFor(topic,index+1,title,m)}</div>`});
 
     const allChunks=m.teachingChunks||[];
     const coreChunkIndex=allChunks.findIndex(c=>c.source==='core');
@@ -55,7 +64,7 @@
       if(check)slides.push(chunkCheckSlide(check,i,allChunks.length));
     });
 
-    m.specificationPoints.forEach((point,i)=>slides.push({type:'specpoint',label:`AQA ${i+1}`,html:`<div class="presentation-slide-heading"><span>A${i+1}</span><div><small>AQA ${esc(m.ref)} · specification point ${point.index}</small><h2>${esc(point.text)}</h2></div></div><div class="presentation-specpoint-grid"><article><span class="eyebrow">What it means</span><p class="presentation-lead">${esc(point.teaching)}</p></article><article><span class="eyebrow">How to show mastery</span><p>${esc(point.guidance)}</p></article></div><div class="presentation-callout"><strong>Check yourself</strong><p>Explain this exact specification point without notes, then apply it to a different GCSE-style context.</p></div>`}));
+    (m.teachingUnits||m.specificationPoints).forEach((point,i)=>slides.push(...pointTeachingSlides(topic,title,index,m,point,i)));
 
     const termChunks=chunk(m.keyTerms,6);
     if(termChunks.length){
