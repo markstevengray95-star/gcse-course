@@ -1,7 +1,7 @@
 (() => {
   const TOOLS={
     arcade:{title:'Science Word Arcade',subtitle:'Command words · variables · scientific vocabulary',src:'tools/science-word-arcade.html'},
-    physics:{title:'AQA Physics Interactive',subtitle:'Relationships · rearranging · SI units · calculations',src:'tools/aqa-physics-interactive.html'}
+    physics:{title:'AQA Physics Interactive',subtitle:'Relationships · rearranging · SI units · calculations',src:'tools/aqa-physics-interactive-fixed.html'}
   };
   const HISTORY_KEY='gcse-science-integrated-tool-history-v1';
   const parse=(v,f)=>{try{return JSON.parse(v)||f}catch{return f}};
@@ -38,7 +38,8 @@
     document.getElementById('integratedToolTitle').textContent=t.title;
     document.getElementById('integratedToolSubtitle').textContent=t.subtitle;
     document.getElementById('integratedToolOpen').href=t.src;
-    if(!frame.src.endsWith(t.src))frame.src=t.src;
+    const current=frame.getAttribute('src')||'';
+    if(current!==t.src)frame.setAttribute('src',t.src);
     frame.title=t.title;
     modal.hidden=false;document.body.style.overflow='hidden';
   }
