@@ -1,6 +1,6 @@
 (() => {
   const clean=v=>String(v??'').trim();
-  const norm=v=>clean(v).toLowerCase().replace(/\s+/g,' ');
+  const norm=v=>clean(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
   const compact=v=>clean(v).length>320?`${clean(v).slice(0,317).trim()}…`:clean(v);
   const uniq=list=>{const seen=new Set();return (list||[]).filter(item=>{const key=norm(typeof item==='string'?item:item?.body||item?.text||'');if(!key||seen.has(key))return false;seen.add(key);return true;});};
   const GENERIC_MISCONCEPTIONS=new Set([
