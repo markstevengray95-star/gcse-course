@@ -30,6 +30,7 @@ jobs:
           node --check course-enhancements.js
           node --check textbook-enhancements.js
           node --check science-diagrams.js
+          node --check lesson-visuals.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
           node --check chemistry-lesson-content.js
@@ -45,6 +46,7 @@ jobs:
           node --check learning-flow.js
           node --check study-checkpoints.js
           node --check lesson-quality-schema.js
+          node --check lesson-teaching-depth.js
           node --check lesson-presentation-catalog.js
           node --check presentation-lessons.js
           node --check interactive-presentations.js
@@ -77,3 +79,5 @@ jobs:
         run: node tests/presentation-teaching-tools-audit.mjs
       - name: Audit lesson overhaul phases 1 and 2
         run: node tests/lesson-overhaul-audit.mjs
+      - name: Audit lesson overhaul phases 3 and 4
+        run: node tests/lesson-overhaul-phase34-audit.mjs
