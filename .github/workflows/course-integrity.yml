@@ -43,6 +43,7 @@ jobs:
           node --check integrated-tools.js
           node --check learning-flow.js
           node --check study-checkpoints.js
+          node --check presentation-lessons.js
       - name: Validate existing course structure
         run: node tests/integrity.mjs
       - name: Run full AQA three-subject audit
@@ -61,3 +62,5 @@ jobs:
         run: node tests/learning-flow-audit.mjs
       - name: Audit study checkpoints and resume flow
         run: node tests/study-checkpoints-audit.mjs
+      - name: Audit presentation-style lessons
+        run: node tests/presentation-lessons-audit.mjs
