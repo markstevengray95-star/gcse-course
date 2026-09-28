@@ -7,7 +7,7 @@
     const p1=model.teachingUnits?.[0]||model.specificationPoints?.[0]||{};
     const p2=model.teachingUnits?.[1]||model.specificationPoints?.[1]||p1;
     const questions=[
-      {phase:'teach',command:'Define',marks:1,prompt:`Define “${term[0]}”.`,marking:[mark(term[1],1)]},
+      {phase:'teach',command:'Define',marks:1,prompt:`Define the scientific term “${term[0]}” using precise GCSE Science language.`,marking:[mark(term[1],1)]},
       {phase:'teach',command:'Describe',marks:2,prompt:`Describe the key scientific idea in this lesson: ${p1.text||model.title}.`,marking:[mark(p1.definition||model.coreExplanation,1),mark(p1.example||model.application,1)]},
       {phase:'apply',command:'Explain',marks:3,prompt:p1.question||`Explain ${p1.text||model.title} using precise scientific language.`,marking:[mark(p1.explanation||model.coreExplanation,2),mark(p1.application||model.application,1)]},
       {phase:'apply',command:'Predict',marks:2,prompt:`Predict what would happen in this new context, then justify it: ${p2.application||model.application}`,marking:[mark('State a scientifically plausible outcome.',1),mark(p2.explanation||model.coreExplanation,1)]},
