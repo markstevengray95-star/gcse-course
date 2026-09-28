@@ -1,5 +1,4 @@
 (() => {
-  const esc=v=>String(v??'');
   const metaFor=lesson=>lesson?.biologyMeta||lesson?.chemistryMeta||lesson?.physicsMeta||null;
   const stableId=(topic,title)=>`presentation:${topic.id}:${encodeURIComponent(title||'untitled')}`;
 
@@ -36,7 +35,7 @@
       guidance:point.guidance||'Recall, explain and apply this specification point accurately.',
       teaching:core
     }));
-    return {
+    const model={
       id:stableId(topic,title),topicId:topic.id,topicCode:topic.code,subject:topic.subject,lessonIndex:index,title,
       ref:coverage?.ref||meta?.ref||'',section:coverage?.section||meta?.section||title,scope:coverage?.scope||meta?.scope||'combined',tier:coverage?.tier||meta?.tier||'all',
       duration:seq.duration||'50–60 min',summary:topic.summary||'',objectives:focus,coreExplanation:core,
@@ -46,6 +45,16 @@
       equations:[...(coverage?.equations||meta?.equations||[])],practical:coverage?.practical||meta?.practical||'',
       keyIdeas:[...(coverage?.keyIdeas||[])],skills:[...(coverage?.skills||[])],visualTopicId:topic.id
     };
+    const quality=window.GCSE_LESSON_QUALITY_SCHEMA?.build?.(topic,title,index,lesson,model);
+    if(quality){
+      model.qualitySchemaVersion=quality.schemaVersion;
+      model.lessonStandard=quality.standard;
+      model.teachingChunks=quality.teachingChunks;
+      model.chunkChecks=quality.chunkChecks;
+    }else{
+      model.teachingChunks=[];model.chunkChecks=[];
+    }
+    return model;
   }
 
   function validate(model){
@@ -63,7 +72,10 @@
     if(!model.examTip)missing.push('exam guidance');
     if(!model.independentPractice?.length)missing.push('independent practice');
     if(!model.plenary?.length)missing.push('plenary');
-    return missing;
+    if(!model.teachingChunks?.length)missing.push('teaching chunks');
+    if(model.chunkChecks?.length!==model.teachingChunks?.length)missing.push('chunk checks');
+    const schemaMissing=window.GCSE_LESSON_QUALITY_SCHEMA?.validate?.(model)||[];
+    return [...new Set([...missing,...schemaMissing])];
   }
 
   window.GCSE_LESSON_PRESENTATION_CATALOG={build,validate,stableId,metaFor,coverageFor};
