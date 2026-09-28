@@ -48,6 +48,10 @@ jobs:
           node --check lesson-notebook-organizer.js
           node --check lesson-mastery-actions.js
           node --check lesson-mastery-actions-ui.js
+          node --check lesson-synoptic-connections.js
+          node --check lesson-synoptic-ui.js
+          node --check lesson-quality-review.js
+          node --check lesson-quality-review-ui.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
           node --check chemistry-lesson-content.js
@@ -108,3 +112,5 @@ jobs:
         run: node tests/lesson-overhaul-phase1112-audit.mjs
       - name: Audit lesson overhaul phases 13 and 14
         run: node tests/lesson-overhaul-phase1314-audit.mjs
+      - name: Audit lesson overhaul phases 15 and 16
+        run: node tests/lesson-overhaul-phase1516-audit.mjs
