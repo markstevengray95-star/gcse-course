@@ -44,6 +44,7 @@ jobs:
           node --check integrated-tools.js
           node --check learning-flow.js
           node --check study-checkpoints.js
+          node --check lesson-quality-schema.js
           node --check lesson-presentation-catalog.js
           node --check presentation-lessons.js
           node --check interactive-presentations.js
@@ -74,3 +75,5 @@ jobs:
         run: node tests/all-lesson-presentations-audit.mjs
       - name: Audit presentation teaching controls and mastery
         run: node tests/presentation-teaching-tools-audit.mjs
+      - name: Audit lesson overhaul phases 1 and 2
+        run: node tests/lesson-overhaul-audit.mjs
