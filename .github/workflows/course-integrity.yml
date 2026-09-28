@@ -38,6 +38,10 @@ jobs:
           node --check practical-lesson-ui.js
           node --check lesson-question-ladder.js
           node --check lesson-question-ladder-ui.js
+          node --check lesson-exam-studio.js
+          node --check lesson-exam-studio-ui.js
+          node --check lesson-differentiation.js
+          node --check lesson-differentiation-ui.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
           node --check chemistry-lesson-content.js
@@ -92,3 +96,5 @@ jobs:
         run: node tests/lesson-overhaul-phase56-audit.mjs
       - name: Audit lesson overhaul phases 7 and 8
         run: node tests/lesson-overhaul-phase78-audit.mjs
+      - name: Audit lesson overhaul phases 9 and 10
+        run: node tests/lesson-overhaul-phase910-audit.mjs
