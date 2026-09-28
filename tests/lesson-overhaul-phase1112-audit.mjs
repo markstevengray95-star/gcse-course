@@ -1,0 +1,26 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+const root=new URL('../',import.meta.url);const read=name=>fs.readFileSync(new URL(name,root),'utf8');
+const context={window:{},console};vm.createContext(context);
+for(const file of ['course-data.js','physics-spec-detail.js','biology-spec-detail.js','chemistry-spec-detail.js','spec-practical-sync.js','rich-content.js','physics-lesson-content.js','biology-lesson-content.js','chemistry-lesson-content.js','lesson-sequences.js','lesson-quality-schema.js','lesson-teaching-depth.js','equation-coach.js','practical-lesson-engine.js','lesson-question-ladder.js','lesson-exam-studio.js','lesson-differentiation.js','lesson-mode-plans.js','lesson-presentation-catalog.js'])vm.runInContext(read(file),context,{filename:file});
+const data=context.window.GCSE_COURSE_DATA,rich=context.window.GCSE_RICH_CONTENT,catalog=context.window.GCSE_LESSON_PRESENTATION_CATALOG,modes=context.window.GCSE_LESSON_MODE_PLANS;
+const failures=[];const assert=(ok,msg)=>{if(!ok)failures.push(msg)};let lessons=0,practicalPlans=0,equationPlans=0,teacherPrompts=0,studentHints=0;
+for(const topic of data.topics){
+  for(let index=0;index<topic.lessons.length;index++){
+    const title=topic.lessons[index][0],lesson=rich.getLesson(topic,title,index),model=catalog.build(topic,title,index,lesson);model.subject=topic.subject;lessons++;
+    const plan=modes.build(model),missing=modes.validate(plan);assert(missing.length===0,`${topic.id} · ${title}: incomplete Teacher/Student mode plan (${missing.join(', ')}).`);
+    teacherPrompts+=Object.keys(plan.teacher.prompts).length;studentHints+=plan.student.hints.length;
+    assert(plan.teacher.questioning.length>=5,`${topic.id} · ${title}: teacher questioning bank too small.`);
+    assert(plan.student.nextActions.length>=5,`${topic.id} · ${title}: student next-action sequence too small.`);
+    for(const phase of ['prepare','teach','check','assess','review']){assert(Boolean(plan.teacher.prompts[phase]),`${topic.id} · ${title}: teacher prompt missing ${phase}.`);assert(Boolean(plan.student.actions[phase]),`${topic.id} · ${title}: student action missing ${phase}.`);assert(plan.timing[phase]>0,`${topic.id} · ${title}: timing missing ${phase}.`)}
+    if(model.practical){practicalPlans++;assert(plan.teacher.practical===model.practical,`${topic.id} · ${title}: practical presenter cue mismatch.`)}
+    if(model.equations?.length){equationPlans++;assert(plan.student.hints.some(x=>/equation|calculat/i.test(x)),`${topic.id} · ${title}: equation lesson lacks student calculation hint.`);}
+  }
+}
+assert(lessons===439,`Expected 439 lesson mode plans, found ${lessons}.`);assert(practicalPlans===28,`Expected 28 practical presenter plans, found ${practicalPlans}.`);assert(equationPlans===45,`Expected 45 equation-linked student plans, found ${equationPlans}.`);
+const teacher=read('lesson-teacher-mode.js');for(const token of ['teacher-console','data-teacher-timer-display','data-teacher-preset','Reveal current answers','Hide answers','data-teacher-question','Quick whiteboard','data-teacher-board','Presenter notes','Suggested pace','phase11-teacher-active'])assert(teacher.includes(token),`lesson-teacher-mode.js missing ${token}`);
+const student=read('lesson-student-mode.js');for(const token of ['student-pathway','data-student-progress','Give me a hint','Use Support mode','Save key idea','Mark stage complete','data-student-finish','Mark complete & next','lessonCheckpoint','phase12-student-active'])assert(student.includes(token),`lesson-student-mode.js missing ${token}`);
+const css=read('lesson-overhaul-phase1112.css');for(const token of ['.teacher-console','.student-pathway','.teacher-board','.student-finish-card','.phase11-teacher-active','.phase12-student-active','@media(max-width:650px)','prefers-reduced-motion'])assert(css.includes(token),`lesson-overhaul-phase1112.css missing ${token}`);
+const indexHtml=read('index.html');for(const file of ['lesson-overhaul-phase1112.css','lesson-mode-plans.js','lesson-teacher-mode.js','lesson-student-mode.js'])assert(indexHtml.includes(file),`index.html missing ${file}.`);assert(indexHtml.indexOf('lesson-mode-plans.js')<indexHtml.indexOf('lesson-teacher-mode.js'),'Mode plans must load before Teacher Mode.');assert(indexHtml.indexOf('lesson-differentiation-ui.js')<indexHtml.indexOf('lesson-student-mode.js'),'Student Mode must load after differentiation controls.');assert(indexHtml.indexOf('presentation-lessons.js')<indexHtml.indexOf('lesson-teacher-mode.js'),'Teacher Mode must enhance rendered presentations.');
+if(failures.length){console.error(`LESSON OVERHAUL PHASE 11/12 AUDIT FAILED (${failures.length})`);failures.slice(0,120).forEach(x=>console.error(`- ${x}`));if(failures.length>120)console.error(`...and ${failures.length-120} more.`);process.exit(1)}
+console.log(`LESSON OVERHAUL PHASE 11/12 AUDIT PASSED: ${lessons} lessons have Teacher and Student mode plans; ${practicalPlans} practical lessons carry presenter cues; ${equationPlans} equation-linked lessons carry calculation hints; ${teacherPrompts} teacher phase prompts and ${studentHints} student hints validated.`);
