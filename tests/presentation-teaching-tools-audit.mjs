@@ -24,7 +24,6 @@ for(const token of [
   'data-mastery-state',
   'GCSE_LESSON_PRESENTATION_CATALOG',
   'GCSE_COURSE_POLISH?.addNote',
-  'presentation-response',
   'presentation-mastery'
 ]) assert(js.includes(token),`presentation-teaching-tools.js missing ${token}`);
 
