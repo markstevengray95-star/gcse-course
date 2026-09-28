@@ -28,7 +28,7 @@
     const practice=deck.querySelector('.slide-practice');if(practice&&!practice.querySelector('.diff-inline-stretch')){const challenge=document.createElement('aside');challenge.className='diff-inline-stretch';challenge.innerHTML=`<strong>Stretch challenge</strong><p>${esc(ctx.plan.stretch.synopticQuestion)}</p>`;practice.appendChild(challenge);}
   }
   function applyMode(deck,ctx,mode){
-    const valid=['support','core','stretch'].includes(mode)?mode:'core';deck.dataset.differentiation=valid;saveMode(ctx,valid);
+    const valid=['support','core','stretch'].includes(mode)?mode:'core';deck.setAttribute('data-differentiation',valid);saveMode(ctx,valid);
     deck.querySelectorAll('[data-diff-mode]').forEach(btn=>btn.classList.toggle('active',btn.dataset.diffMode===valid));
     deck.querySelectorAll('.diff-mode-content').forEach(el=>el.hidden=!el.classList.contains(`diff-${valid}-content`));
     deck.querySelectorAll('.question-pulse textarea,.exam-studio-question textarea').forEach(area=>{
