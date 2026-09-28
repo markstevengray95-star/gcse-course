@@ -1,6 +1,5 @@
 (() => {
   const clean=v=>String(v??'').trim();
-  const has=(arr,val)=>Array.isArray(arr)&&arr.some(x=>x===val);
 
   function result(id,label,pass,detail,severity='blocker'){
     return {id,label,pass:Boolean(pass),detail:clean(detail),severity};
@@ -16,6 +15,7 @@
     const diff=window.GCSE_LESSON_DIFFERENTIATION?.build?.(model,topic,allTopics)||null;
     const modes=window.GCSE_LESSON_MODE_PLANS?.build?.(model)||null;
     const synoptic=window.GCSE_LESSON_SYNOPTIC?.build?.(model,topic,allTopics)||null;
+    const synopticLinks=synoptic?.links||synoptic?.connections||[];
     const lessonVisual=visuals?.get?.(topic,model.title,model,null,model.lessonIndex)||null;
     const commands=new Set(questions.map(q=>q.command));
     const pointVisuals=(model.teachingUnits||[]).map((unit,i)=>visuals?.get?.(topic,model.title,model,unit,model.lessonIndex+i));
@@ -33,7 +33,7 @@
     gates.push(result('exam-studio','Lesson Exam Studio',window.GCSE_LESSON_EXAM_STUDIO?.validate?.(exam)?.length===0&&exam?.questions?.some(q=>q.marks===6),`${exam?.questions?.length||0} Exam Studio questions; ${exam?.totalMarks||0} total marks.`));
     gates.push(result('differentiation','Support / Core / Stretch',window.GCSE_LESSON_DIFFERENTIATION?.validate?.(diff)?.length===0,'Differentiation must preserve specification content while changing scaffold/challenge.'));
     gates.push(result('teacher-student','Teacher and Student modes',window.GCSE_LESSON_MODE_PLANS?.validate?.(modes)?.length===0,'Both presentation delivery and independent-study routes are required.'));
-    gates.push(result('synoptic','Synoptic connection',window.GCSE_LESSON_SYNOPTIC?.validate?.(synoptic)?.length===0&&(synoptic?.connections||[]).length>=2,`${synoptic?.connections?.length||0} curated science connections.`));
+    gates.push(result('synoptic','Synoptic connection',window.GCSE_LESSON_SYNOPTIC?.validate?.(synoptic)?.length===0&&synopticLinks.length>=2,`${synopticLinks.length} curated science connections.`));
 
     if(model.practical){
       gates.push(result('practical-coach','Required practical coaching',Boolean(practical)&&window.GCSE_PRACTICAL_LESSON_ENGINE?.validate?.(practical)?.length===0,'Practical-linked lessons require before/during/after/exam coaching.'));
@@ -46,7 +46,6 @@
     }
     if(model.scope==='triple')gates.push(result('triple-scope','Separate Science scope',model.scope==='triple','Separate Science-only lesson must remain explicitly scoped.'));
 
-    // Subject-specific non-negotiables. These deliberately check the quality route, not extra curriculum content.
     if(topic.subject==='biology'){
       gates.push(result('biology-reasoning','Biology structure/process reasoning',(model.teachingUnits||[]).every(u=>clean(u.explanation).length>20&&clean(u.application).length>20),'Biology teaching points must connect biological idea/process to consequence or application.'));
     }else if(topic.subject==='chemistry'){
