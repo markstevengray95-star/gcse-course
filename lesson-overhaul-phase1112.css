@@ -1,3 +1,4 @@
+@import url("teacher-tools-contrast.css");
 .teacher-console,.student-pathway{display:none;border:1px solid var(--line,#d9e1ea);border-radius:16px;background:var(--panel,#fff);padding:14px;margin:12px 0;box-shadow:0 10px 28px rgba(15,23,42,.06)}
 .phase11-teacher-active .teacher-console{display:block}.phase12-student-active .student-pathway{display:block}.phase11-teacher-active .student-pathway,.phase12-student-active .teacher-console{display:none}
 .teacher-console-head,.student-pathway-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}.teacher-console-head h3,.student-pathway-head h3{margin:.15rem 0}.teacher-console-head p,.student-pathway-head small{margin:0;color:var(--muted,#64748b)}
