@@ -41,12 +41,11 @@
       window.GCSE_COURSE_POLISH?.addNote?.(`AQA ${plan.ref} · ${plan.title}\n\n${text}`,`${plan.title} · targeted mastery plan`,'mastery-review');
     });
   }
-  function upgrade(deck){
-    if(!deck)return;const ctx=context(deck);if(!ctx)return;render(deck,ctx);
-  }
+  function upgrade(deck){if(!deck)return;const ctx=context(deck);if(!ctx)return;render(deck,ctx);}
   function scan(){if(state.activeTab!=='lessons')return;document.querySelectorAll('.lesson-presentation').forEach(upgrade);}
   const observer=new MutationObserver(()=>requestAnimationFrame(scan));observer.observe(document.body,{childList:true,subtree:true});
   window.addEventListener('storage',e=>{if(e.key===KEY)requestAnimationFrame(scan);});
+  document.addEventListener('click',e=>{if(e.target.closest?.('[data-mastery-state]'))setTimeout(scan,0);});
   requestAnimationFrame(scan);
   window.GCSE_LESSON_MASTERY_ACTIONS_UI={scan,upgrade,jump};
 })();
