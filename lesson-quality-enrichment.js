@@ -79,6 +79,19 @@
       candidates.push({heading:`AQA focus ${i+1} · misconception repair`,body:u.misconception,source:'quality-enrichment'});
       candidates.push({heading:`AQA focus ${i+1} · exam reasoning`,body:u.question||u.guidance,source:'quality-enrichment'});
     });
+    (model.keyTerms||[]).forEach((pair,i)=>{
+      if(!Array.isArray(pair)||!clean(pair[0])||!clean(pair[1]))return;
+      candidates.push({heading:`Scientific language ${i+1} · ${clean(pair[0])}`,body:`${clean(pair[0])} — ${clean(pair[1])}`,source:'quality-enrichment-language'});
+    });
+    (model.keyIdeas||[]).forEach((text,i)=>candidates.push({heading:`AQA key idea ${i+1}`,body:clean(text),source:'quality-enrichment-key-idea'}));
+    (model.skills||[]).forEach((skill,i)=>{
+      const body=typeof skill==='string'?clean(skill):`${clean(skill?.type||'Working Scientifically')} — ${clean(skill?.text||'')}`;
+      candidates.push({heading:`Scientific skill ${i+1}`,body,source:'quality-enrichment-skill'});
+    });
+    (model.equations||[]).forEach((eq,i)=>candidates.push({heading:`Quantitative relationship ${i+1}`,body:`For ${model.title}, use ${clean(eq)} by identifying the relevant quantities, keeping units consistent, rearranging if necessary and checking that the final answer has the correct unit.`,source:'quality-enrichment-equation'}));
+    if(clean(model.practical))candidates.push({heading:'Required practical connection',body:`In ${model.title}, connect the scientific idea to the required practical: ${clean(model.practical)}`,source:'quality-enrichment-practical'});
+    (model.objectives||[]).forEach((obj,i)=>candidates.push({heading:`AQA objective ${i+1}`,body:`For ${model.title}, the AQA focus is: ${clean(obj)}`,source:'quality-enrichment-objective'}));
+    if(clean(model.examTip))candidates.push({heading:'Exam reasoning',body:`For ${model.title}, ${clean(model.examTip)}`,source:'quality-enrichment-exam'});
     for(const candidate of candidates){
       if(chunks.length>=6)break;
       const body=compact(candidate.body),key=norm(body);if(!body||seen.has(key))continue;seen.add(key);
@@ -111,7 +124,7 @@
       reasoning,
       representations:representationsPair,
       languageFocus:languageFocus(model),
-      evidenceChallenge:`Make a claim about “${clean(u1.text||model.title)}”. Support it with one observation, example, measurement or relationship from this lesson, then explain why that evidence supports the claim.`,
+      evidenceChallenge:`In ${model.title}, make a claim about “${clean(u1.text||model.title)}”. Support it with one observation, example, measurement or relationship from this lesson, then explain why that evidence supports the claim.`,
       misconceptionRepair:{incorrect:clean(u1.misconception||model.misconception),prompt:`Rewrite the misconception using the correct science from ${model.title}.`,model:clean(u1.explanation||model.coreExplanation)},
       transferChallenge:`Use the reasoning from ${model.title} to explain a different context involving ${clean(u2.text||u1.text||model.title)}. State what stays the same and what changes.`
     };
