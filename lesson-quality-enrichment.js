@@ -63,14 +63,21 @@
   }
 
   function ensureTeachingChunks(model){
-    const chunks=[...(model.teachingChunks||[])];
-    const checks=[...(model.chunkChecks||[])];
-    const seen=new Set(chunks.map(c=>norm(c.body)));
+    const chunks=[];const checks=[];const seen=new Set();const originalChecks=model.chunkChecks||[];
+    for(const sourceChunk of model.teachingChunks||[]){
+      const body=compact(sourceChunk.body),key=norm(body);if(!body||seen.has(key))continue;seen.add(key);
+      const id=sourceChunk.id||`teach-${chunks.length+1}`;const oldCheck=originalChecks.find(c=>c.chunkId===sourceChunk.id);
+      const chunk={...sourceChunk,id,index:chunks.length+1,body};chunks.push(chunk);
+      checks.push({chunkId:id,question:oldCheck?.question||sourceChunk.checkQuestion||`Explain ${clean(sourceChunk.heading||'this idea').toLowerCase()} for ${model.title}.`,answer:oldCheck?.answer||sourceChunk.checkAnswer||body});
+    }
     const candidates=[];
     (model.teachingUnits||[]).forEach((u,i)=>{
       candidates.push({heading:`AQA focus ${i+1} · meaning`,body:u.definition,source:'quality-enrichment'});
+      candidates.push({heading:`AQA focus ${i+1} · explanation`,body:u.explanation,source:'quality-enrichment'});
+      candidates.push({heading:`AQA focus ${i+1} · example`,body:u.example,source:'quality-enrichment'});
       candidates.push({heading:`AQA focus ${i+1} · application`,body:u.application,source:'quality-enrichment'});
       candidates.push({heading:`AQA focus ${i+1} · misconception repair`,body:u.misconception,source:'quality-enrichment'});
+      candidates.push({heading:`AQA focus ${i+1} · exam reasoning`,body:u.question||u.guidance,source:'quality-enrichment'});
     });
     for(const candidate of candidates){
       if(chunks.length>=6)break;
@@ -79,7 +86,7 @@
       const chunk={id,index:chunks.length+1,heading:candidate.heading,body,source:candidate.source,checkQuestion:`Explain ${candidate.heading.toLowerCase()} for ${model.title}, then give one piece of scientific evidence or an example.`,checkAnswer:body};
       chunks.push(chunk);checks.push({chunkId:id,question:chunk.checkQuestion,answer:chunk.checkAnswer});
     }
-    return {chunks:chunks.slice(0,8),checks:checks.filter(c=>chunks.some(x=>x.id===c.chunkId)).slice(0,8)};
+    return {chunks:chunks.slice(0,8).map((c,i)=>({...c,index:i+1})),checks:checks.filter(c=>chunks.some(x=>x.id===c.chunkId)).slice(0,8)};
   }
 
   function enhance(model,topic){
