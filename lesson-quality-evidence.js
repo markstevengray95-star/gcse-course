@@ -17,6 +17,7 @@
     const diff=window.GCSE_LESSON_DIFFERENTIATION?.build?.(model,topic,allTopics)||null;
     const modes=window.GCSE_LESSON_MODE_PLANS?.build?.(model)||null;
     const synoptic=window.GCSE_LESSON_SYNOPTIC?.build?.(model,topic,allTopics)||null;
+    const synopticLinks=synoptic?.links||synoptic?.connections||[];
     const lessonVisual=visuals?.get?.(topic,model.title,model,null,model.lessonIndex)||null;
     const gate=window.GCSE_LESSON_QUALITY_GATES?.evaluate?.(model,topic,allTopics)||null;
     const cats={
@@ -61,7 +62,7 @@
     add(cats.interactivity,'question-ui','Interactive checks',4,qValid?4:0,`${questions.length} distributed checks`,'Repair the distributed-question model.');
     add(cats.interactivity,'differentiation','Differentiation',3,window.GCSE_LESSON_DIFFERENTIATION?.validate?.(diff)?.length===0?3:0,'Support / Core / Stretch','Complete the differentiation plan.');
     add(cats.interactivity,'modes','Teacher / Student modes',3,window.GCSE_LESSON_MODE_PLANS?.validate?.(modes)?.length===0?3:0,'Teacher-led and self-paced routes','Restore both delivery modes.');
-    add(cats.interactivity,'synoptic','Synoptic transfer',3,Math.min(3,(synoptic?.connections?.length||0)),`${synoptic?.connections?.length||0} curated connections`,'Add more purposeful connections where they strengthen transfer.');
+    add(cats.interactivity,'synoptic','Synoptic transfer',3,Math.min(3,synopticLinks.length),`${synopticLinks.length} curated connections`,'Add more purposeful connections where they strengthen transfer.');
     add(cats.interactivity,'specialist','Specialist interaction',2,(model.practical||model.equations?.length)?2:1.5,model.practical?'Practical interaction':model.equations?.length?'Equation interaction':'General interactive lesson','Add a purposeful manipulation/prediction interaction if the science supports it.');
 
     const commands=new Set(questions.map(q=>q.command));
