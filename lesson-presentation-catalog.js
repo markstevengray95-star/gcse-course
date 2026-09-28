@@ -29,7 +29,7 @@
     const starter=(seq.starter||[]).map(item=>Array.isArray(item)?{question:item[0],answer:item[1]}:{question:String(item),answer:''});
     const independent=[...(seq.independent||[])];
     const plenary=[...(seq.plenary||[])];
-    const specPoints=(coverage?.points||[]).map(point=>({
+    const rawSpecPoints=(coverage?.points||[]).map(point=>({
       index:point.index,
       text:point.text,
       guidance:point.guidance||'Recall, explain and apply this specification point accurately.',
@@ -39,12 +39,20 @@
       id:stableId(topic,title),topicId:topic.id,topicCode:topic.code,subject:topic.subject,lessonIndex:index,title,
       ref:coverage?.ref||meta?.ref||'',section:coverage?.section||meta?.section||title,scope:coverage?.scope||meta?.scope||'combined',tier:coverage?.tier||meta?.tier||'all',
       duration:seq.duration||'50–60 min',summary:topic.summary||'',objectives:focus,coreExplanation:core,
-      specificationPoints:specPoints,keyTerms:terms,workedExample:worked,starter,
+      specificationPoints:rawSpecPoints,keyTerms:terms,workedExample:worked,starter,
       guidedPractice:seq.guided||application,independentPractice:independent.length?independent:[application],stretch:seq.stretch||`Write a GCSE-style extended response applying ${String(title).toLowerCase()} to an unfamiliar context.`,
       application,misconception,examTip,plenary:plenary.length?plenary:[`Summarise ${title} in one sentence.`,`Use the key terminology accurately from memory.`,`Identify one point you would revisit before an exam.`],
       equations:[...(coverage?.equations||meta?.equations||[])],practical:coverage?.practical||meta?.practical||'',
       keyIdeas:[...(coverage?.keyIdeas||[])],skills:[...(coverage?.skills||[])],visualTopicId:topic.id
     };
+
+    const depth=window.GCSE_LESSON_TEACHING_DEPTH;
+    model.teachingUnits=rawSpecPoints.map((point,i)=>{
+      const enriched=depth?.enrich?.({topic,title,point:point.text,core,terms,application,misconception,guidance:point.guidance,index:i});
+      return enriched?{...point,...enriched}:{...point,definition:point.text,explanation:core,example:application,application,misconception,question:point.guidance,visualKey:`${title} ${point.text}`};
+    });
+    model.specificationPoints=model.teachingUnits;
+
     const quality=window.GCSE_LESSON_QUALITY_SCHEMA?.build?.(topic,title,index,lesson,model);
     if(quality){
       model.qualitySchemaVersion=quality.schemaVersion;
@@ -74,6 +82,9 @@
     if(!model.plenary?.length)missing.push('plenary');
     if(!model.teachingChunks?.length)missing.push('teaching chunks');
     if(model.chunkChecks?.length!==model.teachingChunks?.length)missing.push('chunk checks');
+    if(model.teachingUnits?.length!==model.objectives?.length)missing.push('specification teaching units');
+    const depth=window.GCSE_LESSON_TEACHING_DEPTH;
+    (model.teachingUnits||[]).forEach(unit=>{if(depth?.validate?.(unit)?.length)missing.push('complete specification teaching sequence');});
     const schemaMissing=window.GCSE_LESSON_QUALITY_SCHEMA?.validate?.(model)||[];
     return [...new Set([...missing,...schemaMissing])];
   }
