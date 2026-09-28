@@ -68,7 +68,7 @@ assert(counts.physics===110,`Expected 110 Physics presentations, found ${counts.
 assert(ids.size===total,`Expected ${total} unique presentation IDs, found ${ids.size}.`);
 
 const presentation=read('presentation-lessons.js');
-for(const token of ['GCSE_LESSON_PRESENTATION_CATALOG','m.specificationPoints.forEach','m.keyTerms','m.workedExample','m.equations','m.practical','m.keyIdeas','m.skills','Individual lesson presentation','slide-retrieval','slide-specpoint']){
+for(const token of ['GCSE_LESSON_PRESENTATION_CATALOG','m.specificationPoints.forEach','m.keyTerms','m.workedExample','m.equations','m.practical','m.keyIdeas','m.skills','Individual lesson presentation',"type:'retrieval'","type:'specpoint'"]){
   assert(presentation.includes(token),`presentation-lessons.js missing ${token}`);
 }
 const index=read('index.html');
