@@ -47,6 +47,7 @@ jobs:
           node --check lesson-presentation-catalog.js
           node --check presentation-lessons.js
           node --check interactive-presentations.js
+          node --check presentation-teaching-tools.js
       - name: Validate existing course structure
         run: node tests/integrity.mjs
       - name: Run full AQA three-subject audit
@@ -71,3 +72,5 @@ jobs:
         run: node tests/interactive-presentations-audit.mjs
       - name: Audit every individual lesson presentation
         run: node tests/all-lesson-presentations-audit.mjs
+      - name: Audit presentation teaching controls and mastery
+        run: node tests/presentation-teaching-tools-audit.mjs
