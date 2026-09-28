@@ -64,6 +64,12 @@
 
   function ensureTeachingChunks(model){
     const chunks=[];const checks=[];const seen=new Set();const originalChecks=model.chunkChecks||[];
+    const addChunk=(candidate,kind='enrich')=>{
+      const body=compact(candidate.body),key=norm(body);if(!body||seen.has(key))return false;seen.add(key);
+      const id=`${kind}-${chunks.length+1}`;
+      const chunk={id,index:chunks.length+1,heading:candidate.heading,body,source:candidate.source||'quality-enrichment',checkQuestion:candidate.checkQuestion||`Explain ${clean(candidate.heading||'this idea').toLowerCase()} for ${model.title}, then give one piece of scientific evidence or an example.`,checkAnswer:candidate.checkAnswer||body};
+      chunks.push(chunk);checks.push({chunkId:id,question:chunk.checkQuestion,answer:chunk.checkAnswer});return true;
+    };
     for(const sourceChunk of model.teachingChunks||[]){
       const body=compact(sourceChunk.body),key=norm(body);if(!body||seen.has(key))continue;seen.add(key);
       const id=sourceChunk.id||`teach-${chunks.length+1}`;const oldCheck=originalChecks.find(c=>c.chunkId===sourceChunk.id);
@@ -102,12 +108,25 @@
       candidates.push({heading:`AQA focus ${i+1} · cause and effect`,body:`For ${model.title}, connect the AQA idea “${point}” to its consequence: ${application}. The scientific reasoning that links them is: ${explanation}`,source:'quality-enrichment-causal'});
       candidates.push({heading:`AQA focus ${i+1} · correct the reasoning`,body:`In ${model.title}, avoid this misconception: ${misconception}. Replace it with the correct reasoning: ${explanation}`,source:'quality-enrichment-correction'});
     });
-    for(const candidate of candidates){
-      if(chunks.length>=6)break;
-      const body=compact(candidate.body),key=norm(body);if(!body||seen.has(key))continue;seen.add(key);
-      const id=`enrich-${chunks.length+1}`;
-      const chunk={id,index:chunks.length+1,heading:candidate.heading,body,source:candidate.source,checkQuestion:`Explain ${candidate.heading.toLowerCase()} for ${model.title}, then give one piece of scientific evidence or an example.`,checkAnswer:body};
-      chunks.push(chunk);checks.push({chunkId:id,question:chunk.checkQuestion,answer:chunk.checkAnswer});
+    for(const candidate of candidates){if(chunks.length>=6)break;addChunk(candidate);}
+    if(chunks.length<6){
+      const u=model.teachingUnits?.[0]||{};
+      const point=clean(u.text||u.definition||model.objectives?.[0]||model.title);
+      const definition=clean(u.definition||point);
+      const explanation=clean(u.explanation||model.coreExplanation||point);
+      const example=clean(u.example||u.application||model.application||point);
+      const application=clean(u.application||model.application||point);
+      const misconception=clean(u.misconception||model.misconception||`Do not replace ${point} with vague everyday wording.`);
+      const prefix=`${model.topicCode} lesson ${model.lessonIndex+1} · ${model.title}`;
+      const fallback=[
+        {heading:'Evidence focus',body:`Evidence focus for ${prefix}: use “${example}” as evidence for the AQA idea “${point}”, then state exactly what the example shows.`},
+        {heading:'Causal reasoning',body:`Causal reasoning for ${prefix}: begin with “${definition}”, then explain the mechanism using “${explanation}” and link it to “${application}”.`},
+        {heading:'Precision check',body:`Precision check for ${prefix}: reject the misconception “${misconception}” and replace it with the scientifically correct explanation “${explanation}”.`},
+        {heading:'Exam application',body:`Exam application for ${prefix}: apply “${point}” to a different GCSE context and justify the predicted outcome using the lesson explanation “${explanation}”.`},
+        {heading:'Scientific language',body:`Scientific language for ${prefix}: explain “${point}” using the definition “${definition}” and avoid replacing the key scientific relationship with vague wording.`},
+        {heading:'Evidence evaluation',body:`Evidence evaluation for ${prefix}: decide how strongly “${example}” supports “${point}”, and justify the judgement using “${explanation}”.`}
+      ];
+      for(const candidate of fallback){if(chunks.length>=6)break;addChunk(candidate,'grounded');}
     }
     return {chunks:chunks.slice(0,8).map((c,i)=>({...c,index:i+1})),checks:checks.filter(c=>chunks.some(x=>x.id===c.chunkId)).slice(0,8)};
   }
