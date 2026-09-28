@@ -44,6 +44,7 @@ jobs:
           node --check integrated-tools.js
           node --check learning-flow.js
           node --check study-checkpoints.js
+          node --check lesson-presentation-catalog.js
           node --check presentation-lessons.js
           node --check interactive-presentations.js
       - name: Validate existing course structure
@@ -68,3 +69,5 @@ jobs:
         run: node tests/presentation-lessons-audit.mjs
       - name: Audit interactive presentations and scientific diagrams
         run: node tests/interactive-presentations-audit.mjs
+      - name: Audit every individual lesson presentation
+        run: node tests/all-lesson-presentations-audit.mjs
