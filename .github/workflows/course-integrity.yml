@@ -41,6 +41,7 @@ jobs:
           node --check course-polish.js
           node --check specification-completeness.js
           node --check integrated-tools.js
+          node --check learning-flow.js
       - name: Validate existing course structure
         run: node tests/integrity.mjs
       - name: Run full AQA three-subject audit
@@ -55,3 +56,5 @@ jobs:
         run: node tests/specification-completeness-audit.mjs
       - name: Audit integrated Arcade and Physics tools
         run: node tests/integrated-tools-audit.mjs
+      - name: Audit guided learning flow
+        run: node tests/learning-flow-audit.mjs
