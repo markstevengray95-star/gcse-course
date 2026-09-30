@@ -38,7 +38,9 @@
   addScript('data-gcse-plans-paper-script','plans-paper-guide.js');
   addStyle('data-gcse-auth-style','gcse-auth.css');
   addStyle('data-gcse-billing-style','gcse-billing-ui.css');
+  addStyle('data-gcse-access-style','gcse-access-control.css');
   addScript('data-gcse-billing-script','gcse-billing-ui.js');
+  addScript('data-gcse-access-script','gcse-access-control.js');
 
   const loadCloudSync=()=>addScript('data-gcse-cloud-sync','gcse-cloud-sync.js');
   const loadAuth=()=>{
