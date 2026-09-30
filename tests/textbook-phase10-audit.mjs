@@ -1,0 +1,7 @@
+import fs from 'node:fs';
+const root=new URL('../',import.meta.url);const read=n=>fs.readFileSync(new URL(n,root),'utf8');const failures=[];const assert=(ok,msg)=>{if(!ok)failures.push(msg)};
+const source=read('textbook-phase10.js');for(const token of ['gcse-science-textbook-phase10-v1','Skip to textbook page','A+ Text','↕ Spacing','Focus reading','Print chapter','aria-live','afterprint','textbook-print-all','GCSE_TEXTBOOK_PHASE10'])assert(source.includes(token),`textbook-phase10.js missing '${token}'.`);
+const css=read('textbook-phase10.css');for(const token of ['.textbook-reading-tools','.textbook-skip-link','.textbook-text-large','.textbook-spacing-relaxed','.textbook-reading-focus',':focus-visible','prefers-reduced-motion','@media print','.textbook-print-all'])assert(css.includes(token),`textbook-phase10.css missing '${token}'.`);
+assert(source.includes('localStorage.setItem'),'Phase 10 readability settings are not persistent.');assert(source.includes("setAttribute('aria-pressed'"),'Phase 10 controls do not expose pressed state.');
+if(failures.length){console.error(`TEXTBOOK PHASE 10 AUDIT FAILED (${failures.length})`);failures.forEach(x=>console.error(`- ${x}`));process.exit(1)}
+console.log('TEXTBOOK PHASE 10 AUDIT PASSED: persistent text size, line spacing, focus reading, keyboard focus visibility, reduced-motion support, skip navigation and print-chapter mode are wired.');
