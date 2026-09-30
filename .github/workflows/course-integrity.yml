@@ -36,6 +36,9 @@ jobs:
           node --check textbook-phase5.js
           node --check textbook-phase6.js
           node --check textbook-phase7.js
+          node --check textbook-phase8.js
+          node --check textbook-phase9.js
+          node --check textbook-phase10.js
           node --check science-diagrams.js
           node --check lesson-visuals.js
           node --check lesson-visual-interactions.js
@@ -106,6 +109,12 @@ jobs:
         run: node tests/textbook-phase6-audit.mjs
       - name: Audit textbook phase 7 revision layer
         run: node tests/textbook-phase7-audit.mjs
+      - name: Audit textbook phase 8 scope and Working Scientifically
+        run: node tests/textbook-phase8-audit.mjs
+      - name: Audit textbook phase 9 search and cross links
+        run: node tests/textbook-phase9-audit.mjs
+      - name: Audit textbook phase 10 accessibility and print polish
+        run: node tests/textbook-phase10-audit.mjs
       - name: Audit project hubs and navigation
         run: node tests/project-hub-audit.mjs
       - name: Audit simplified UI and notebook tools
