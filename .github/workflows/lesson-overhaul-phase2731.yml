@@ -1,0 +1,30 @@
+name: GCSE Lesson Overhaul Phase 27-31
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-phase-27-31:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check remaining phase JavaScript syntax
+        run: |
+          node --check lesson-overhaul-phase2731.js
+          node --check lesson-overhaul-phase2731-ui.js
+      - name: Audit phases 27 to 31
+        run: node tests/lesson-overhaul-phase2731-audit.mjs
+      - name: Re-run phases 25 and 26 audit
+        run: node tests/lesson-overhaul-phase2526-audit.mjs
+      - name: Validate core course structure
+        run: node tests/integrity.mjs
+      - name: Run full AQA three-subject audit
+        run: node tests/full-audit.mjs
