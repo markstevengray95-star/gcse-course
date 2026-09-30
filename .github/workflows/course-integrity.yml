@@ -29,6 +29,7 @@ jobs:
           node --check course-audit-fixes.js
           node --check course-enhancements.js
           node --check textbook-enhancements.js
+          node --check textbook-phase1.js
           node --check science-diagrams.js
           node --check lesson-visuals.js
           node --check lesson-visual-interactions.js
@@ -85,6 +86,8 @@ jobs:
         run: node tests/full-audit.mjs
       - name: Audit textbook diagrams and terminology
         run: node tests/textbook-audit.mjs
+      - name: Audit textbook phase 1 digital chapter reader
+        run: node tests/textbook-phase1-audit.mjs
       - name: Audit project hubs and navigation
         run: node tests/project-hub-audit.mjs
       - name: Audit simplified UI and notebook tools
