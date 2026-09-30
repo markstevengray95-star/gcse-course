@@ -32,6 +32,7 @@ jobs:
           node --check textbook-phase1.js
           node --check textbook-phase2.js
           node --check textbook-phase3.js
+          node --check textbook-phase4.js
           node --check science-diagrams.js
           node --check lesson-visuals.js
           node --check lesson-visual-interactions.js
@@ -94,6 +95,8 @@ jobs:
         run: node tests/textbook-phase2-audit.mjs
       - name: Audit textbook phase 3 interactive diagrams
         run: node tests/textbook-phase3-audit.mjs
+      - name: Audit textbook phase 4 calculation workshop
+        run: node tests/textbook-phase4-audit.mjs
       - name: Audit project hubs and navigation
         run: node tests/project-hub-audit.mjs
       - name: Audit simplified UI and notebook tools
