@@ -46,6 +46,8 @@ jobs:
           node --check equation-coach-ui.js
           node --check practical-lesson-engine.js
           node --check practical-lesson-ui.js
+          node --check practical-source-port.js
+          node --check practical-source-ui.js
           node --check lesson-question-ladder.js
           node --check lesson-question-ladder-ui.js
           node --check lesson-exam-studio.js
@@ -117,6 +119,8 @@ jobs:
         run: node tests/textbook-phase10-audit.mjs
       - name: Audit project hubs and navigation
         run: node tests/project-hub-audit.mjs
+      - name: Audit migrated Practical Lab source port
+        run: node tests/practical-source-port-audit.mjs
       - name: Audit simplified UI and notebook tools
         run: node tests/polish-audit.mjs
       - name: Audit complete AQA lesson coverage
