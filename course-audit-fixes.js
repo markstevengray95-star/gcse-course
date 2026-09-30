@@ -3,7 +3,6 @@
   const stableKey=(topicId,title)=>`lesson:${topicId}:${encodeURIComponent(title||'untitled')}`;
   const lessonsForMode=(topic,mode)=>topic.lessons.filter(([,scope])=>mode==='triple'||scope!=='triple');
 
-  // Migrate legacy mode/index progress before replacing lessonKey.
   let migrated=false;
   for(const topic of window.GCSE_COURSE_DATA.topics){
     for(const mode of ['combined','triple']){
@@ -16,7 +15,6 @@
   }
   if(migrated&&typeof saveLessons==='function') saveLessons();
 
-  // All future completion checks now resolve the visible index back to the stable lesson title.
   lessonKey=function(topicId,index){
     const topic=window.GCSE_COURSE_DATA.topics.find(t=>t.id===topicId);
     const entry=topic?visibleLessons(topic)[index]:null;
@@ -27,48 +25,25 @@
   if(typeof renderHome==='function'&&document.getElementById('homeView')&&!document.getElementById('homeView').hidden) renderHome();
   if(typeof renderTopic==='function'&&document.getElementById('topicView')&&!document.getElementById('topicView').hidden) renderTopic();
 
-  // Load the plan badge, plan comparison and six-paper course guide.
-  if(!document.querySelector('link[data-gcse-plans-paper-style]')){
-    const style=document.createElement('link');
-    style.rel='stylesheet';
-    style.href='plans-paper-guide.css';
-    style.dataset.gcsePlansPaperStyle='true';
-    document.head.appendChild(style);
-  }
-  if(!document.querySelector('script[data-gcse-plans-paper-script]')){
-    const script=document.createElement('script');
-    script.src='plans-paper-guide.js';
-    script.dataset.gcsePlansPaperScript='true';
-    document.body.appendChild(script);
-  }
-
-  // Load the account system and Supabase-backed learning-data sync without changing the main course boot order.
-  if(!document.querySelector('link[data-gcse-auth-style]')){
-    const style=document.createElement('link');
-    style.rel='stylesheet';
-    style.href='gcse-auth.css';
-    style.dataset.gcseAuthStyle='true';
-    document.head.appendChild(style);
-  }
-
-  const loadCloudSync=()=>{
-    if(document.querySelector('script[data-gcse-cloud-sync]')) return;
-    const sync=document.createElement('script');
-    sync.src='gcse-cloud-sync.js';
-    sync.dataset.gcseCloudSync='true';
-    document.body.appendChild(sync);
+  const addStyle=(marker,href)=>{
+    if(document.querySelector(`link[${marker}]`)) return;
+    const style=document.createElement('link');style.rel='stylesheet';style.href=href;style.setAttribute(marker,'true');document.head.appendChild(style);
+  };
+  const addScript=(marker,src,onload)=>{
+    if(document.querySelector(`script[${marker}]`)){if(onload)onload();return;}
+    const script=document.createElement('script');script.src=src;script.setAttribute(marker,'true');if(onload)script.onload=onload;document.body.appendChild(script);
   };
 
+  addStyle('data-gcse-plans-paper-style','plans-paper-guide.css');
+  addScript('data-gcse-plans-paper-script','plans-paper-guide.js');
+  addStyle('data-gcse-auth-style','gcse-auth.css');
+  addStyle('data-gcse-billing-style','gcse-billing-ui.css');
+  addScript('data-gcse-billing-script','gcse-billing-ui.js');
+
+  const loadCloudSync=()=>addScript('data-gcse-cloud-sync','gcse-cloud-sync.js');
   const loadAuth=()=>{
-    if(document.querySelector('script[data-gcse-auth-script]')){
-      if(window.GCSE_AUTH) loadCloudSync();
-      return;
-    }
-    const script=document.createElement('script');
-    script.src='gcse-auth.js';
-    script.dataset.gcseAuthScript='true';
-    script.onload=loadCloudSync;
-    document.body.appendChild(script);
+    if(document.querySelector('script[data-gcse-auth-script]')){if(window.GCSE_AUTH)loadCloudSync();return;}
+    addScript('data-gcse-auth-script','gcse-auth.js',loadCloudSync);
   };
 
   if(window.supabase?.createClient){
