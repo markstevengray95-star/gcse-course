@@ -36,7 +36,7 @@
   }
 
   function phase23Html(ctx){
-    const q=quizState(ctx);return `<section class="phase23-team-quiz" data-phase23-team-quiz><div class="phase2324-head"><div><span class="eyebrow">Phase 23 · Live Team Quiz Mode</span><h3>Presenter-led team rounds</h3><p>Four teams share one screen. Scores stay by team and are never converted into individual rankings.</p></div><div class="team-quiz-timer"><strong data-quiz-time>${q.seconds}s</strong><button type="button" data-quiz-timer>${q.running?'Pause':'Start timer'}</button></div></div>${roundHtml(ctx,q)}<div class="team-quiz-footer"><span>${esc(ctx.model.overhaul23.finishPrompt)}</span><button type="button" data-quiz-reset>Reset quiz</button></div></section>`;
+    const q=quizState(ctx);return `<section class="phase23-team-quiz" data-phase23-team-quiz data-lesson-id="${esc(ctx.key)}"><div class="phase2324-head"><div><span class="eyebrow">Phase 23 · Live Team Quiz Mode</span><h3>Presenter-led team rounds</h3><p>Four teams share one screen. Scores stay by team and are never converted into individual rankings.</p></div><div class="team-quiz-timer"><strong data-quiz-time>${q.seconds}s</strong><button type="button" data-quiz-timer>${q.running?'Pause':'Start timer'}</button></div></div>${roundHtml(ctx,q)}<div class="team-quiz-footer"><span>${esc(ctx.model.overhaul23.finishPrompt)}</span><button type="button" data-quiz-reset>Reset quiz</button></div></section>`;
   }
 
   function challengeCard(ctx,challenge){
@@ -46,8 +46,8 @@
 
   function phase24Html(ctx){
     const mastery=masteryState(ctx),phase=ctx.model.overhaul24;
-    if(!mastery.unlocked)return `<section class="phase24-expert-challenges is-locked" data-phase24-expert><div class="phase2324-head"><div><span class="eyebrow">Phase 24 · Unlockable Expert Challenges</span><h3>Expert challenges locked</h3><p>${esc(phase.masteryMessage)}</p></div><span class="expert-lock">🔒 ${mastery.secure}/${mastery.total} secure</span></div><div class="expert-progress" aria-label="${mastery.secure} of ${mastery.total} specification points secure"><i style="width:${mastery.total?Math.round(mastery.secure/mastery.total*100):0}%"></i></div><small>These are optional stretch tasks. Nothing is lost by skipping them.</small></section>`;
-    return `<section class="phase24-expert-challenges is-unlocked" data-phase24-expert><div class="phase2324-head"><div><span class="eyebrow">Phase 24 · Unlockable Expert Challenges</span><h3>Expert mode unlocked</h3><p>${esc(phase.unlockedMessage)}</p></div><span class="expert-lock">✓ ${mastery.secure}/${mastery.total} secure</span></div><div class="expert-challenge-grid">${phase.challenges.map(challenge=>challengeCard(ctx,challenge)).join('')}</div><p class="expert-optional-note">Optional stretch only · no penalty for skipping · use after the main lesson work is secure.</p></section>`;
+    if(!mastery.unlocked)return `<section class="phase24-expert-challenges is-locked" data-phase24-expert data-lesson-key="${esc(ctx.key)}" data-unlock="false"><div class="phase2324-head"><div><span class="eyebrow">Phase 24 · Unlockable Expert Challenges</span><h3>Expert challenges locked</h3><p>${esc(phase.masteryMessage)}</p></div><span class="expert-lock">🔒 ${mastery.secure}/${mastery.total} secure</span></div><div class="expert-progress" aria-label="${mastery.secure} of ${mastery.total} specification points secure"><i style="width:${mastery.total?Math.round(mastery.secure/mastery.total*100):0}%"></i></div><small>These are optional stretch tasks. Nothing is lost by skipping them.</small></section>`;
+    return `<section class="phase24-expert-challenges is-unlocked" data-phase24-expert data-lesson-key="${esc(ctx.key)}" data-unlock="true"><div class="phase2324-head"><div><span class="eyebrow">Phase 24 · Unlockable Expert Challenges</span><h3>Expert mode unlocked</h3><p>${esc(phase.unlockedMessage)}</p></div><span class="expert-lock">✓ ${mastery.secure}/${mastery.total} secure</span></div><div class="expert-challenge-grid">${phase.challenges.map(challenge=>challengeCard(ctx,challenge)).join('')}</div><p class="expert-optional-note">Optional stretch only · no penalty for skipping · use after the main lesson work is secure.</p></section>`;
   }
 
   function renderQuiz(panel,ctx){
@@ -75,7 +75,7 @@
   function bindPanel(panel,ctx){
     bindQuiz(panel,ctx);
     panel.querySelector('[data-quiz-timer]')?.addEventListener('click',()=>{const q=quizState(ctx);if(q.running){q.running=false;stopTimer();persistQuiz();panel.querySelector('[data-quiz-timer]').textContent='Start timer';}else startTimer(panel,ctx);});
-    panel.querySelector('[data-quiz-reset]')?.addEventListener('click',()=>{stopTimer();quizStore[ctx.key]=defaultQuiz(ctx);persistQuiz();panel.outerHTML=phase23Html(ctx);const replacement=document.querySelector(`[data-phase23-team-quiz][data-lesson-id="${CSS.escape?.(ctx.key)||ctx.key}"]`)||ctx.deck?.parentElement?.querySelector('[data-phase23-team-quiz]');if(replacement)bindPanel(replacement,ctx);});
+    panel.querySelector('[data-quiz-reset]')?.addEventListener('click',()=>{stopTimer();quizStore[ctx.key]=defaultQuiz(ctx);persistQuiz();const parent=panel.parentElement;panel.outerHTML=phase23Html(ctx);const replacement=parent?.querySelector(`[data-phase23-team-quiz][data-lesson-id="${ctx.key.replace(/"/g,'\\"')}"]`)||parent?.querySelector('[data-phase23-team-quiz]');if(replacement)bindPanel(replacement,ctx);});
   }
 
   function bindExpert(panel,ctx){
@@ -85,12 +85,12 @@
 
   function inject(deck){
     const ctx=context(deck);if(!ctx)return;ctx.deck=deck;const parent=deck.parentElement;if(!parent)return;
-    let quiz=parent.querySelector('[data-phase23-team-quiz]');if(!quiz){quiz=document.createElement('section');quiz.outerHTML=phase23Html(ctx);const anchor=parent.querySelector('.targeted-mastery-plan')||parent.querySelector('.lesson-presentation-mastery')||deck;anchor.insertAdjacentHTML('afterend',phase23Html(ctx));quiz=anchor.nextElementSibling;quiz.dataset.lessonId=ctx.key;bindPanel(quiz,ctx);}
-    let expert=parent.querySelector('[data-phase24-expert]');const html=phase24Html(ctx);if(!expert){quiz.insertAdjacentHTML('afterend',html);expert=quiz.nextElementSibling;}else if(expert.dataset.lessonKey!==ctx.key||expert.dataset.unlock!==String(masteryState(ctx).unlocked)){expert.outerHTML=html;expert=quiz.nextElementSibling;}
-    expert.dataset.lessonKey=ctx.key;expert.dataset.unlock=String(masteryState(ctx).unlocked);bindExpert(expert,ctx);
+    let quiz=parent.querySelector('[data-phase23-team-quiz]');if(!quiz){const anchor=parent.querySelector('.targeted-mastery-plan')||parent.querySelector('.lesson-presentation-mastery')||deck;anchor.insertAdjacentHTML('afterend',phase23Html(ctx));quiz=anchor.nextElementSibling;bindPanel(quiz,ctx);}
+    const unlocked=String(masteryState(ctx).unlocked);let expert=parent.querySelector('[data-phase24-expert]');const html=phase24Html(ctx);if(!expert){quiz.insertAdjacentHTML('afterend',html);expert=quiz.nextElementSibling;}else if(expert.dataset.lessonKey!==ctx.key||expert.dataset.unlock!==unlocked){expert.outerHTML=html;expert=quiz.nextElementSibling;}
+    bindExpert(expert,ctx);
   }
 
-  function refreshExpert(deck){const ctx=context(deck);if(!ctx)return;const parent=deck.parentElement,quiz=parent?.querySelector('[data-phase23-team-quiz]'),old=parent?.querySelector('[data-phase24-expert]');if(!quiz)return;const html=phase24Html(ctx);if(old)old.outerHTML=html;else quiz.insertAdjacentHTML('afterend',html);const expert=quiz.nextElementSibling;expert.dataset.lessonKey=ctx.key;expert.dataset.unlock=String(masteryState(ctx).unlocked);bindExpert(expert,ctx);}
+  function refreshExpert(deck){const ctx=context(deck);if(!ctx)return;const parent=deck.parentElement,quiz=parent?.querySelector('[data-phase23-team-quiz]'),old=parent?.querySelector('[data-phase24-expert]');if(!quiz)return;const html=phase24Html(ctx);if(old)old.outerHTML=html;else quiz.insertAdjacentHTML('afterend',html);const expert=quiz.nextElementSibling;bindExpert(expert,ctx);}
   function scan(){if(state.activeTab!=='lessons')return;document.querySelectorAll('.lesson-presentation').forEach(inject);}
 
   new MutationObserver(()=>requestAnimationFrame(scan)).observe(document.body,{childList:true,subtree:true});
