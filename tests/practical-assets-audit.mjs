@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
+for(const asset of ['practical-source-ui.css','practical-source-port.js','practical-source-fidelity.js','practical-source-ui.js'])assert.ok(html.includes(asset),`${asset} missing from index`);
+assert.ok(html.indexOf('practical-source-port.js')<html.indexOf('practical-source-fidelity.js'));
+assert.ok(html.indexOf('practical-source-fidelity.js')<html.indexOf('practical-source-ui.js'));
+const ui=fs.readFileSync(new URL('../practical-source-ui.js',import.meta.url),'utf8');
+for(const token of ['injectTopicPracticalLaunchers','enhanceProjectHub','data-topic-source-lab','data-open-practical-topic','data-open-practical-sim','Export CSV','Repeat this setting','Guided apparatus setup'])assert.ok(ui.includes(token),`UI lost ${token}`);
+const port=fs.readFileSync(new URL('../practical-source-port.js',import.meta.url),'utf8');
+for(const token of ['reaction-time','making-salts','titrationDrop','randomQuadrat','statsForRows','halfRange','showUncertainty','exportCSV'])assert.ok(port.includes(token),`engine lost ${token}`);
+const fidelity=fs.readFileSync(new URL('../practical-source-fidelity.js',import.meta.url),'utf8');
+for(const token of ['milk-decay','ion-tests','apparatusGuide','_currentRecorded','courseSupplementIds'])assert.ok(fidelity.includes(token),`fidelity layer lost ${token}`);
+console.log('PRACTICAL ASSET AUDIT PASSED: engine, fidelity layer, UI and stylesheet are loaded in the correct order.');
