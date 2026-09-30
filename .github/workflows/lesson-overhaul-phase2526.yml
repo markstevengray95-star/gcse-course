@@ -1,0 +1,26 @@
+name: GCSE Lesson Overhaul Phase 25-26
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-phase-25-26:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Phase 25 and 26 JavaScript syntax
+        run: |
+          node --check lesson-overhaul-phase2526.js
+          node --check lesson-overhaul-phase2526-ui.js
+      - name: Audit lesson overhaul phases 25 and 26
+        run: node tests/lesson-overhaul-phase2526-audit.mjs
+      - name: Re-run previous lesson overhaul audit
+        run: node tests/lesson-overhaul-phase2324-audit.mjs
