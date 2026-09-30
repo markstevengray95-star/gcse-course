@@ -30,20 +30,21 @@
     const mechanism=firstSentence(model.application)||`Apply ${title} to an unfamiliar scientific context.`;
     const consequence=firstSentence(model.examTip)||`Link the mechanism back to the command word and evidence.`;
     const required=terms.slice(0,3);
+    const ref=model.ref?`AQA ${model.ref}`:`${topic.code||topic.id} AQA science`;
     return {
       version:'21.0',
       title:'Scientific explanation mastery',
       explanationFrame:{
         prompt:`Explain ${title} as a connected scientific chain rather than a list of facts.`,
         steps:[
-          {label:'1 · State the scientific idea',text:objective},
-          {label:'2 · Give the cause',text:`Use the lesson evidence to establish the cause: ${short(cause)}`},
-          {label:'3 · Explain the mechanism',text:`Show how or why the change happens: ${short(mechanism)}`},
-          {label:'4 · Link to the outcome',text:`Finish by connecting the mechanism to the outcome or marks: ${short(consequence)}`}
+          {label:'1 · State the scientific idea',text:`Start with the exact scientific idea being assessed in ${title}: ${objective}`},
+          {label:'2 · Give the cause',text:`Use the lesson evidence to establish the cause in ${title}: ${short(cause)}`},
+          {label:'3 · Explain the mechanism',text:`Show how or why the change happens in ${title}: ${short(mechanism)}`},
+          {label:'4 · Link to the outcome',text:`Finish by connecting the mechanism to the outcome or marks for ${title}: ${short(consequence)}`}
         ]
       },
       precisionTerms:terms,
-      extendedResponsePrompt:`Write a precise GCSE explanation of ${title}. Use ${required.join(', ')} and include at least two clear cause → mechanism → outcome links.`,
+      extendedResponsePrompt:`Write a precise GCSE explanation of ${title} (${ref}). Use ${required.join(', ')} and include at least two clear cause → mechanism → outcome links.`,
       selfCheck:[
         `I answered the command word for ${title}.`,
         'I used scientific vocabulary rather than vague everyday wording.',
@@ -60,7 +61,8 @@
     const next=index<lessons.length-1?lessons[index+1]?.[0]:null;
     const neighbour=previous||next||topic.title||topic.code||'this topic';
     const ref=model.ref?`AQA ${model.ref}`:'the AQA specification';
-    const visualPrompt=`Before revealing a model for ${title}, predict the labels, trend, sequence or relationship that must be visible for the diagram to be scientifically correct.`;
+    const lessonIdentity=`${topic.code||topic.id} · ${ref}`;
+    const visualPrompt=`Before revealing a model for ${title} (${lessonIdentity}), predict the labels, trend, sequence or relationship that must be visible for the diagram to be scientifically correct.`;
     const questions=[
       {command:'Define',prompt:`Define one essential term from ${title} precisely.`,guidance:'Give the scientific meaning, not an example.'},
       {command:'Describe',prompt:`Describe the key pattern, structure or sequence in ${title}.`,guidance:'State what happens or what is shown before explaining why.'},
@@ -74,14 +76,14 @@
       title:'Visual reasoning and question variety',
       visualReasoning:[
         {label:'Predict',prompt:visualPrompt},
-        {label:'Read',prompt:`Identify the scientific evidence a correct ${title} visual must communicate, not just its labels.`},
-        {label:'Explain',prompt:`Use the visual evidence to explain ${title} in a complete scientific sentence.`},
-        {label:'Transfer',prompt:`Change one condition or variable and predict how the ${title} visual or outcome should change.`}
+        {label:'Read',prompt:`Identify the scientific evidence a correct ${title} visual must communicate for ${lessonIdentity}, not just its labels.`},
+        {label:'Explain',prompt:`Use the visual evidence to explain ${title} in a complete scientific sentence linked to ${lessonIdentity}.`},
+        {label:'Transfer',prompt:`Change one condition or variable and predict how the ${title} visual or outcome should change in this ${lessonIdentity} context.`}
       ],
       questionSet:questions,
       interleave:{
         linkLesson:neighbour,
-        prompt:`Connect ${title} to ${neighbour}: state one idea that transfers between them and one important difference.`,
+        prompt:`Connect ${title} (${topic.code||topic.id}) to ${neighbour}: state one idea that transfers between them and one important difference.`,
         examLink:`Use the connection to build a two-topic response that still stays focused on ${ref}.`
       },
       interactionModes:['Predict → reveal → explain','Compare two representations','Spot the scientific error','Transfer to an unfamiliar context'],
