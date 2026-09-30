@@ -120,8 +120,14 @@ jobs:
         run: node tests/textbook-phase10-audit.mjs
       - name: Audit project hubs and navigation
         run: node tests/project-hub-audit.mjs
-      - name: Audit migrated Practical Lab source port
-        run: node tests/practical-source-port-audit.mjs
+      - name: Audit practical catalog and source models
+        run: node tests/practical-catalog-audit.mjs
+      - name: Audit all 28 practical launcher mappings
+        run: node tests/practical-mapping-audit.mjs
+      - name: Audit practical workflow fidelity
+        run: node tests/practical-workflow-audit.mjs
+      - name: Audit practical page and UI wiring
+        run: node tests/practical-assets-audit.mjs
       - name: Audit simplified UI and notebook tools
         run: node tests/polish-audit.mjs
       - name: Audit complete AQA lesson coverage
