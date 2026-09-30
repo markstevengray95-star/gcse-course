@@ -27,6 +27,21 @@
   if(typeof renderHome==='function'&&document.getElementById('homeView')&&!document.getElementById('homeView').hidden) renderHome();
   if(typeof renderTopic==='function'&&document.getElementById('topicView')&&!document.getElementById('topicView').hidden) renderTopic();
 
+  // Load the plan badge, plan comparison and six-paper course guide.
+  if(!document.querySelector('link[data-gcse-plans-paper-style]')){
+    const style=document.createElement('link');
+    style.rel='stylesheet';
+    style.href='plans-paper-guide.css';
+    style.dataset.gcsePlansPaperStyle='true';
+    document.head.appendChild(style);
+  }
+  if(!document.querySelector('script[data-gcse-plans-paper-script]')){
+    const script=document.createElement('script');
+    script.src='plans-paper-guide.js';
+    script.dataset.gcsePlansPaperScript='true';
+    document.body.appendChild(script);
+  }
+
   // Load the account system and Supabase-backed learning-data sync without changing the main course boot order.
   if(!document.querySelector('link[data-gcse-auth-style]')){
     const style=document.createElement('link');
