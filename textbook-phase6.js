@@ -143,3 +143,10 @@
   document.querySelectorAll('#topicContent .textbook-reader').forEach(enhance);
   window.GCSE_TEXTBOOK_PHASE6={buildTopicCases,responseLevels,enhance,commandStrategy:strategy,storageKey:STORAGE_KEY};
 })();
+
+(() => {
+  if(document.querySelector('link[data-textbook-phase7]'))return;
+  const link=document.createElement('link');link.rel='stylesheet';link.href='textbook-phase7.css';link.dataset.textbookPhase7='true';document.head.appendChild(link);
+  if(document.querySelector('script[data-textbook-phase7]'))return;
+  const script=document.createElement('script');script.src='textbook-phase7.js';script.dataset.textbookPhase7='true';script.addEventListener('error',()=>console.error('Could not load textbook Phase 7.'));document.head.appendChild(script);
+})();
