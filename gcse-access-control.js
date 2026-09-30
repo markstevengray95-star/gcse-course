@@ -2,6 +2,9 @@
   'use strict';
 
   const FREE_PREVIEW = Object.freeze({
+    // The current GCSE dataset has no standalone topic called "Measurements".
+    // B1 is the agreed free sample topic and includes the measurement-heavy
+    // Microscopy and magnification lesson among its three sample lessons.
     topicIds: ['b1'],
     lessonIndexes: { b1: [0, 1, 2] },
     textbookTopicIds: ['b1'],
@@ -46,7 +49,8 @@
   const currentPlan = () => entitlements.is_admin ? 'teacher' : (entitlements.access_active ? normalisePlan(entitlements.plan) : 'free');
   const hasTier = required => (TIER_RANK[currentPlan()] || 0) >= (TIER_RANK[normalisePlan(required)] || 0);
   const can = feature => feature === 'free_preview' ? true : Boolean(entitlements.is_admin || entitlements[feature]);
-  const activeTopicId = () => window.state?.activeTopicId || new URLSearchParams(location.search).get('topic') || null;
+  const activeTopicId = () => new URLSearchParams(location.search).get('topic') || null;
+  const activeTab = () => document.querySelector('#contentTabs [data-tab].active')?.dataset.tab || 'overview';
   const isFreeTopic = topicId => FREE_PREVIEW.topicIds.includes(String(topicId || ''));
   const isFreeLesson = (topicId, index) => (FREE_PREVIEW.lessonIndexes[String(topicId || '')] || []).includes(Number(index));
 
@@ -62,9 +66,7 @@
     return 'full_course';
   }
 
-  function requiredPlan(feature) {
-    return FEATURE_PLAN[feature] || 'Plus';
-  }
+  const requiredPlan = feature => FEATURE_PLAN[feature] || 'Plus';
 
   function ensureModal() {
     if (modal) return modal;
@@ -113,8 +115,8 @@
     el.removeAttribute('aria-disabled');
     el.removeAttribute('data-gcse-required-feature');
     el.removeAttribute('data-gcse-required-plan');
-    const badge = el.querySelector(':scope > .gcse-lock-badge');
-    badge?.remove();
+    el.removeAttribute('data-gcse-locked-label');
+    el.querySelector?.(':scope > .gcse-lock-badge')?.remove();
   }
 
   function markLock(el, feature, label) {
@@ -125,7 +127,8 @@
     el.dataset.gcseRequiredFeature = feature;
     el.dataset.gcseRequiredPlan = requiredPlan(feature);
     el.dataset.gcseLockedLabel = label || 'This feature';
-    if (!el.querySelector(':scope > .gcse-lock-badge')) {
+    const replacedElement = ['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName);
+    if (!replacedElement && !el.querySelector(':scope > .gcse-lock-badge')) {
       const badge = document.createElement('span');
       badge.className = 'gcse-lock-badge';
       badge.textContent = `🔒 ${requiredPlan(feature)}`;
@@ -204,11 +207,11 @@
       showLock('full_course', 'This topic');
       return;
     }
-    const tab = window.state?.activeTab;
-    const feature = tab ? requirementForTab(tab, topicId) : null;
+    const tab = activeTab();
+    const feature = requirementForTab(tab, topicId);
     if (feature && !can(feature)) {
-      if (window.state) window.state.activeTab = 'overview';
-      if (typeof window.renderTopic === 'function') window.renderTopic();
+      const overview = document.querySelector('#contentTabs [data-tab="overview"]');
+      overview?.click();
       showLock(feature, 'That section');
     }
   }
@@ -233,7 +236,7 @@
     gateEvent(event);
   }, true);
 
-  // Guard direct calls and URL navigation as well as visible buttons.
+  // Guard programmatic/direct topic navigation in addition to visible controls.
   const wrapGlobals = () => {
     if (typeof window.openTopic === 'function' && !window.openTopic.__gcseAccessWrapped) {
       const original = window.openTopic;
@@ -246,20 +249,6 @@
       };
       wrapped.__gcseAccessWrapped = true;
       window.openTopic = wrapped;
-    }
-    if (typeof window.renderTopicContent === 'function' && !window.renderTopicContent.__gcseAccessWrapped) {
-      const original = window.renderTopicContent;
-      const wrapped = function(topic) {
-        const tab = window.state?.activeTab || 'overview';
-        const feature = requirementForTab(tab, topic?.id);
-        if (feature && !can(feature)) {
-          if (window.state) window.state.activeTab = 'overview';
-          showLock(feature, 'That section');
-        }
-        return original.call(this, topic);
-      };
-      wrapped.__gcseAccessWrapped = true;
-      window.renderTopicContent = wrapped;
     }
   };
 
