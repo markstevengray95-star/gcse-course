@@ -97,6 +97,9 @@
     const value=String(text);
     if(/milk.*pH|temperature.*decay|decay.*milk/i.test(value))return 'milk-decay';
     if(/identify ions|unknown.*ionic|chemical tests.*ions|ions in unknown/i.test(value))return 'ion-tests';
+    // Match the exact synced spec wording where the old practical app used a shorter title.
+    if(/qualitative reagents.*carbohydrates.*lipids.*proteins|test.*carbohydrates.*lipids.*proteins/i.test(value))return 'food-tests';
+    if(/investigate factors affecting resistance|resistance of electrical circuits/i.test(value))return 'resistance';
     return baseMatch(value,subject);
   };
 
