@@ -27,9 +27,9 @@
   const rank = Object.fromEntries(PLANS.map((p, i) => [p.id, i]));
   const normalisePlan = value => {
     const raw = String(value || '').trim().toLowerCase().replace(/[_\s-]+/g, '');
-    if (['teacher', 'teacherplan'].includes(raw)) return 'teacher';
+    if (['teacher', 'teacherplan', 'school', 'schoolplan'].includes(raw)) return 'teacher';
     if (['pro', 'premium', 'studentpro'].includes(raw)) return 'pro';
-    if (['plus', 'fullcourse', 'student'].includes(raw)) return 'plus';
+    if (['plus', 'full', 'fullcourse', 'student'].includes(raw)) return 'plus';
     return 'free';
   };
   const readStoredPlan = () => {
@@ -46,6 +46,7 @@
     return null;
   };
   const detectPlan = () => normalisePlan(
+    window.GCSE_AUTH?.getProfile?.()?.plan ||
     window.GCSE_ACCOUNT?.plan ||
     window.GCSE_ACCOUNT?.tier ||
     window.GCSE_AUTH?.currentUser?.plan ||
@@ -137,8 +138,7 @@
   function requestUpgrade(planId, modal) {
     const status = modal.querySelector('[data-plan-status]');
     const plan = planById(planId);
-    const event = new CustomEvent('gcse-plan-upgrade-request', { detail: { plan: planId } });
-    window.dispatchEvent(event);
+    window.dispatchEvent(new CustomEvent('gcse-plan-upgrade-request', { detail: { plan: planId } }));
     if (typeof window.GCSE_SUBSCRIPTIONS?.checkout === 'function') {
       window.GCSE_SUBSCRIPTIONS.checkout(planId);
       return;
@@ -211,9 +211,10 @@
 
   document.addEventListener('keydown', event => { if (event.key === 'Escape' && !document.querySelector('[data-plan-modal]')?.hidden) closePlans(); });
   window.addEventListener('gcse-plan-changed', event => refreshPlan(event.detail?.plan));
+  window.addEventListener('gcse-auth-changed', event => refreshPlan(event.detail?.signedIn ? event.detail?.profile?.plan : 'free'));
   window.GCSE_PLANS_AND_PAPERS = { plans: PLANS, papers: PAPERS, getCurrentPlan: () => currentPlan, setPlanFromAccount: refreshPlan, openPlans, openPaper: id => { activePaper = id; ensurePaperGuide(); const guide = document.querySelector('[data-paper-breakdown]'); guide?.scrollIntoView({behavior:'smooth',block:'start'}); } };
 
-  const boot = () => { ensureTopPlanBadge(); ensurePaperGuide(); };
+  const boot = () => { currentPlan = detectPlan(); ensureTopPlanBadge(); ensurePaperGuide(); };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
   new MutationObserver(() => { ensureTopPlanBadge(); ensurePaperGuide(); }).observe(document.body, { childList: true, subtree: true });
 })();
