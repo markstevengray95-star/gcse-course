@@ -72,6 +72,8 @@ jobs:
           node --check lesson-quality-enrichment-ui.js
           node --check lesson-specificity-review.js
           node --check lesson-specificity-ui.js
+          node --check lesson-overhaul-phase2122.js
+          node --check lesson-overhaul-phase2122-ui.js
           node --check physics-lesson-content.js
           node --check biology-lesson-content.js
           node --check chemistry-lesson-content.js
@@ -166,3 +168,5 @@ jobs:
         run: node tests/lesson-overhaul-phase1718-audit.mjs
       - name: Audit lesson overhaul phases 19 and 20
         run: node tests/lesson-overhaul-phase1920-audit.mjs
+      - name: Audit lesson overhaul phases 21 and 22
+        run: node tests/lesson-overhaul-phase2122-audit.mjs
