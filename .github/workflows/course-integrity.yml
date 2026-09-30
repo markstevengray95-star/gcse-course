@@ -35,6 +35,7 @@ jobs:
           node --check textbook-phase4.js
           node --check textbook-phase5.js
           node --check textbook-phase6.js
+          node --check textbook-phase7.js
           node --check science-diagrams.js
           node --check lesson-visuals.js
           node --check lesson-visual-interactions.js
@@ -103,6 +104,8 @@ jobs:
         run: node tests/textbook-phase5-audit.mjs
       - name: Audit textbook phase 6 exam literacy
         run: node tests/textbook-phase6-audit.mjs
+      - name: Audit textbook phase 7 revision layer
+        run: node tests/textbook-phase7-audit.mjs
       - name: Audit project hubs and navigation
         run: node tests/project-hub-audit.mjs
       - name: Audit simplified UI and notebook tools
