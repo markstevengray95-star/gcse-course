@@ -26,14 +26,27 @@ const sandbox = {
 sandbox.window=sandbox;
 vm.createContext(sandbox);
 
-for(const file of ['course-data.js','practical-source-port.js']){
+// Mirror the browser load order so spec-practical-sync expands the base course data
+// to the current Biology/Chemistry/Physics required-practical set before mapping it.
+for(const file of [
+  'course-data.js',
+  'physics-spec-detail.js',
+  'biology-spec-detail.js',
+  'chemistry-spec-detail.js',
+  'spec-practical-sync.js',
+  'practical-source-port.js'
+]){
   vm.runInContext(fs.readFileSync(new URL(`../${file}`,import.meta.url),'utf8'),sandbox,{filename:file});
 }
 
 const DATA=sandbox.GCSE_COURSE_DATA;
 const PORT=sandbox.GCSE_PRACTICAL_SOURCE_PORT;
+const SYNC=sandbox.GCSE_SPEC_PRACTICAL_SYNC;
 assert.ok(DATA,'course data should load');
 assert.ok(PORT,'migrated practical source port should load');
+assert.ok(SYNC,'spec practical sync should load');
+assert.equal(SYNC.total,28,'spec practical sync should expose 28 AQA practical launchers');
+assert.deepEqual(SYNC.counts,{biology:10,chemistry:8,physics:10},'synced AQA practical subject totals changed');
 
 const catalog=PORT.catalog;
 const ids=Object.keys(catalog);
@@ -76,7 +89,7 @@ for(const id of ids){
 assert.equal(validatedModes,36,'not every source investigation mode was validated');
 
 const coursePracticals=DATA.topics.flatMap(topic=>(topic.practicals||[]).map(title=>({topicId:topic.id,subject:topic.subject,title})));
-assert.equal(coursePracticals.length,28,'course should expose the 28 mapped required-practical launchers');
+assert.equal(coursePracticals.length,28,'course should expose the 28 synced required-practical launchers');
 const mapped=[];
 for(const item of coursePracticals){
   const id=PORT.matchCoursePractical(item.title,item.subject);
@@ -96,5 +109,5 @@ for(const token of ['injectTopicPracticalLaunchers','enhanceProjectHub','data-to
 const port=fs.readFileSync(new URL('../practical-source-port.js',import.meta.url),'utf8');
 for(const token of ['reaction-time','making-salts','titrationDrop','randomQuadrat','statsForRows','halfRange','showUncertainty','exportCSV']) assert.ok(port.includes(token),`practical source engine lost ${token}`);
 
-console.log(`PRACTICAL SOURCE PORT AUDIT PASSED: ${ids.length} source practical topics, ${modeCount} investigation modes, ${coursePracticals.length} course launchers; all ${validatedModes} source modes initialise and return usable results.`);
+console.log(`PRACTICAL SOURCE PORT AUDIT PASSED: ${ids.length} source practical topics, ${modeCount} investigation modes, ${coursePracticals.length} synced course launchers; all ${validatedModes} source modes initialise and return usable results.`);
 console.log('Mapped source practical IDs:',[...new Set(mapped.map(x=>x.id))].join(', '));
