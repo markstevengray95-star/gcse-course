@@ -97,11 +97,13 @@
   }
 
   function misconceptionFor(topic,section,related){
+    const title=section?.[0]||topic.title;
+    const focus=related[0]?.name||title;
     const hay=norm([...(section||[]),...related.map(r=>lessonHay(r))].join(' '));
     const hit=misconceptionRules.find(([key])=>hay.includes(norm(key)));
-    if(hit)return hit[1];
+    if(hit)return `${hit[1]} In ${topic.code} ${title}, connect this correction explicitly to ${focus}.`;
     const term=(related.flatMap(r=>r.lesson?.terms||[]).map(x=>x?.[0]).find(Boolean));
-    return `${subjectFallback[topic.subject]}${term?` In this section, use ${term} precisely rather than as a label on its own.`:''}`;
+    return `${subjectFallback[topic.subject]} For ${topic.code} ${title}, ${term?`use ${term} precisely and `:''}connect the explanation directly to ${focus}.`;
   }
 
   function objectiveTasks(related,title){
