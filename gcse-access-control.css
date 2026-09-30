@@ -1,0 +1,102 @@
+.gcse-access-locked {
+  position: relative !important;
+  cursor: not-allowed !important;
+}
+
+.gcse-access-locked:not(input) {
+  opacity: .66;
+}
+
+.gcse-access-locked.topic-card {
+  filter: saturate(.55);
+}
+
+.gcse-access-locked.topic-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, transparent 55%, rgba(7,17,31,.34));
+  pointer-events: none;
+}
+
+.gcse-lock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  width: max-content;
+  max-width: 100%;
+  padding: .28rem .5rem;
+  border-radius: 999px;
+  background: rgba(7,17,31,.9);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 4;
+}
+
+.topic-card > .gcse-lock-badge {
+  position: absolute;
+  right: .75rem;
+  bottom: .75rem;
+}
+
+button.gcse-access-locked > .gcse-lock-badge {
+  margin-left: .4rem;
+}
+
+.gcse-access-modal[hidden] { display: none !important; }
+.gcse-access-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+.gcse-access-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2,8,18,.76);
+  backdrop-filter: blur(5px);
+}
+.gcse-access-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(500px, 100%);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 22px;
+  padding: 1.5rem;
+  background: #0b1728;
+  box-shadow: 0 26px 80px rgba(0,0,0,.42);
+  color: #f7fbff;
+}
+.gcse-access-dialog h2 { margin: .3rem 0 .55rem; }
+.gcse-access-dialog p { margin: 0; color: #c9d5e4; line-height: 1.55; }
+.gcse-access-lock-icon { display: block; font-size: 1.7rem; margin-bottom: .55rem; }
+.gcse-access-close {
+  position: absolute;
+  right: .8rem;
+  top: .7rem;
+  border: 0;
+  background: transparent;
+  color: #c9d5e4;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+.gcse-access-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin-top: 1.15rem;
+}
+.gcse-access-open { overflow: hidden; }
+
+@media (max-width: 650px) {
+  .gcse-lock-badge { font-size: .67rem; }
+  .gcse-access-dialog { padding: 1.2rem; border-radius: 18px; }
+  .gcse-access-actions { flex-direction: column; }
+  .gcse-access-actions .button { width: 100%; }
+}
