@@ -11,6 +11,11 @@
   const uniq=list=>{const seen=new Set();return list.filter(Boolean).filter(x=>{const k=norm(typeof x==='string'?x:JSON.stringify(x));if(!k||seen.has(k))return false;seen.add(k);return true;});};
   const load=()=>{try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')||{}}catch{return{}}};
   const save=data=>localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+  const revisionVocabulary={
+    biology:['cell','organelle','nucleus','chromosome','mitosis','differentiation','stem cell','diffusion','osmosis','active transport','enzyme','digestion','artery','vein','capillary','xylem','phloem','pathogen','antigen','antibody','vaccination','photosynthesis','respiration','metabolism','homeostasis','receptor','effector','hormone','gene','allele','dna','natural selection','evolution','ecosystem','producer','consumer','decomposer','biodiversity','adaptation','variation'],
+    chemistry:['atom','element','compound','mixture','isotope','ion','ionic','covalent','metallic','mole','relative formula mass','concentration','limiting reactant','reactivity','oxidation','reduction','electrolysis','acid','alkali','neutralisation','exothermic','endothermic','activation energy','catalyst','rate','collision theory','equilibrium','hydrocarbon','alkane','alkene','cracking','chromatography','rf value','greenhouse gas','potable water','life cycle assessment','haber process'],
+    physics:['energy','power','efficiency','current','potential difference','resistance','charge','density','internal energy','specific heat capacity','specific latent heat','radioactive','half-life','alpha','beta','gamma','force','resultant force','acceleration','weight','momentum','wavelength','frequency','wave speed','electromagnetic','refraction','magnetic field','motor effect','transformer','induction','orbit','red-shift']
+  };
 
   function entries(topic){
     return (topic.lessons||[]).map(([title],index)=>{
@@ -30,8 +35,28 @@
     return uniq(candidates).slice(0,8);
   }
 
-  function keyTerms(list){
-    return uniq(list.flatMap(e=>(e.model.keyTerms||[]).map(t=>Array.isArray(t)?{term:t[0],definition:t[1]}:null)).filter(x=>x?.term&&x?.definition)).slice(0,16);
+  function keyTerms(list,topic,guide){
+    const out=[];const seen=new Set();
+    const add=(term,definition,source='')=>{const key=norm(term);if(!key||!definition||seen.has(key))return;seen.add(key);out.push({term:String(term).trim(),definition:String(definition).trim(),source});};
+    for(const pair of guide?.terms||[])if(Array.isArray(pair))add(pair[0],pair[1],'Textbook glossary');
+    for(const e of list)for(const pair of e.model.keyTerms||[])if(Array.isArray(pair))add(pair[0],pair[1],e.title);
+
+    const seeds=revisionVocabulary[topic.subject]||[];
+    for(const seed of seeds){
+      if(out.length>=16)break;if(seen.has(norm(seed)))continue;
+      const rec=list.find(e=>norm([e.title,e.model.section,e.model.coreExplanation,...(e.model.objectives||[]),...(e.model.keyTerms||[]).flat(),...(e.model.teachingUnits||[]).flatMap(u=>[u.text,u.definition,u.explanation])].join(' ')).includes(norm(seed)));
+      if(!rec)continue;
+      const exact=(rec.model.keyTerms||[]).find(p=>Array.isArray(p)&&norm(p[0]).includes(norm(seed)));
+      const unit=(rec.model.teachingUnits||[]).find(u=>norm([u.text,u.definition,u.explanation].join(' ')).includes(norm(seed)));
+      const definition=exact?.[1]||unit?.definition||unit?.explanation||rec.model.coreExplanation;
+      add(seed.replace(/\b\w/g,m=>m.toUpperCase()),definition,rec.title);
+    }
+
+    for(const e of list){
+      if(out.length>=16)break;
+      add(e.model.section||e.title,e.model.coreExplanation,e.title);
+    }
+    return out.slice(0,16);
   }
 
   function equations(list){return uniq(list.flatMap(e=>e.model.equations||[])).slice(0,12);}
@@ -49,7 +74,7 @@
     }
     for(const t of terms){
       if(qs.length>=10)break;
-      qs.push({type:'Key term',question:`Define ${t.term}.`,answer:t.definition,source:topic.title});
+      qs.push({type:'Key term',question:`Define ${t.term}.`,answer:t.definition,source:t.source||topic.title});
     }
     for(const e of list){
       if(qs.length>=10)break;
@@ -81,7 +106,7 @@
 
   function buildRevisionPack(topic){
     const list=entries(topic);const guide=RICH.guides?.[topic.id]||{};
-    const terms=keyTerms(list);
+    const terms=keyTerms(list,topic,guide);
     const pack={topicId:topic.id,title:topic.title,code:topic.code,subject:topic.subject,ideas:keyIdeas(list),terms,equations:equations(list),practicals:practicals(list),misconceptions:misconceptions(list)};
     pack.retrieval=retrievalQuestions(list,terms,topic);
     pack.exam=examQuestions(topic,list);
@@ -99,7 +124,7 @@
       <header class="textbook-revision-head"><div><span class="eyebrow">End-of-topic revision</span><h2>${esc(topic.code)} · ${esc(topic.title)}</h2><p>Use this page after learning the chapter: scan the summary, test retrieval without notes, then finish with exam practice.</p></div><button type="button" data-revision-bookmark-page>☆ Bookmark revision page</button></header>
       ${section('Topic map','See the whole chapter',`<div class="textbook-topic-map">${pack.map.map((n,i)=>`<div><span>${i+1}</span><small>${esc(n.type)}</small><strong>${esc(n.label)}</strong></div>`).join('<b>→</b>')}</div>`,'map')}
       ${section('One-page summary','Remember the big ideas',`<div class="textbook-summary-grid">${pack.ideas.map((x,i)=>`<article><span>${i+1}</span><p>${esc(x)}</p></article>`).join('')}</div>`,'summary')}
-      ${section('Key vocabulary','Say it scientifically',`<div class="textbook-revision-terms">${pack.terms.map(t=>`<details><summary>${esc(t.term)}</summary><p>${esc(t.definition)}</p></details>`).join('')}</div>`,'terms')}
+      ${section('Key vocabulary','Say it scientifically',`<div class="textbook-revision-terms">${pack.terms.map(t=>`<details><summary>${esc(t.term)}</summary><p>${esc(t.definition)}</p>${t.source?`<small>From: ${esc(t.source)}</small>`:''}</details>`).join('')}</div>`,'terms')}
       ${pack.equations.length?section('Equations to know','Maths check',`<div class="textbook-revision-equations">${pack.equations.map(eq=>`<code>${esc(eq)}</code>`).join('')}</div>`,'equations'):''}
       ${pack.practicals.length?section('Required practical links','Practical check',`<div class="textbook-revision-practicals">${pack.practicals.map(p=>`<article><strong>${esc(p.title)}</strong><p>${esc(p.reference)}</p></article>`).join('')}</div>`,'practicals'):''}
       ${section('Common misconceptions','Avoid these exam traps',`<div class="textbook-revision-misconceptions">${pack.misconceptions.map((m,i)=>`<article><span>!</span><p>${esc(m)}</p></article>`).join('')}</div>`,'misconceptions')}
