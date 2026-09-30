@@ -20,7 +20,7 @@ export function loadPracticalRuntime(){
   };
   sandbox.window=sandbox;
   vm.createContext(sandbox);
-  for(const file of ['course-data.js','physics-spec-detail.js','biology-spec-detail.js','chemistry-spec-detail.js','spec-practical-sync.js','practical-source-port.js','practical-source-fidelity.js']){
+  for(const file of ['course-data.js','physics-spec-detail.js','biology-spec-detail.js','chemistry-spec-detail.js','spec-practical-sync.js','practical-source-port.js','practical-source-fidelity.js','practical-source-mapping-fixes.js']){
     vm.runInContext(fs.readFileSync(new URL(`../${file}`,import.meta.url),'utf8'),sandbox,{filename:file});
   }
   return {sandbox,storage,DATA:sandbox.GCSE_COURSE_DATA,PORT:sandbox.GCSE_PRACTICAL_SOURCE_PORT,SYNC:sandbox.GCSE_SPEC_PRACTICAL_SYNC,FIDELITY:sandbox.GCSE_PRACTICAL_SOURCE_FIDELITY,setClock:value=>{clock=value;}};
