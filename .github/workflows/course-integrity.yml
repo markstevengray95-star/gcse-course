@@ -47,6 +47,7 @@ jobs:
           node --check practical-lesson-engine.js
           node --check practical-lesson-ui.js
           node --check practical-source-port.js
+          node --check practical-source-fidelity.js
           node --check practical-source-ui.js
           node --check lesson-question-ladder.js
           node --check lesson-question-ladder-ui.js
