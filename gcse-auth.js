@@ -20,8 +20,11 @@
   const state = {
     session: null,
     profile: null,
-    mode: 'signin'
+    mode: 'signin',
+    pendingEmail: ''
   };
+
+  const PROFILE_FIELDS = 'user_id,email,plan,subscription_status,trial_ends_at,created_at,stripe_subscription_id,billing_interval,current_period_end,cancel_at_period_end,is_admin';
 
   const escapeHtml = (value = '') => String(value).replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -29,18 +32,45 @@
 
   const planLabel = plan => ({
     free: 'Free',
-    full: 'Full Course',
-    premium: 'Premium',
-    school: 'School'
-  }[plan] || 'Free');
+    full: 'Plus',
+    full_course: 'Plus',
+    plus: 'Plus',
+    premium: 'Pro',
+    pro: 'Pro',
+    school: 'Teacher',
+    teacher: 'Teacher'
+  }[String(plan || '').toLowerCase()] || 'Free');
 
   const statusLabel = status => ({
     free: 'Free account',
     trialing: 'Trial active',
     active: 'Active',
     past_due: 'Payment issue',
-    canceled: 'Cancelled'
+    canceled: 'Cancelled',
+    unpaid: 'Payment required',
+    paused: 'Paused'
   }[status] || 'Free account');
+
+  function confirmationRedirect() {
+    // This Supabase project is shared by more than one app, so never rely on
+    // the project's global Site URL for GCSE confirmation links.
+    return `${window.location.origin}/`;
+  }
+
+  function friendlyAuthError(error) {
+    const message = String(error?.message || error || '');
+    const lower = message.toLowerCase();
+    if (lower.includes('email address not authorized')) {
+      return 'Email delivery is not configured for public addresses yet. The site owner needs to connect a custom SMTP provider in Supabase.';
+    }
+    if (lower.includes('rate limit') || lower.includes('email rate')) {
+      return 'Too many authentication emails have been requested. Try again shortly; the site owner should also check the Supabase email rate limit.';
+    }
+    if (lower.includes('redirect') && lower.includes('allow')) {
+      return 'The confirmation-email return address is not allowed in Supabase yet. The GCSE site URL needs adding to the Supabase Auth redirect list.';
+    }
+    return message || 'Authentication could not be completed.';
+  }
 
   function getProgressSummary() {
     try {
@@ -115,23 +145,32 @@
     button.textContent = busy ? busyText : button.dataset.label;
   }
 
+  function showEmailActions(show = true) {
+    const actions = document.getElementById('gcseAuthEmailActions');
+    if (actions) actions.hidden = !show;
+  }
+
   function authForm(mode) {
     const signup = mode === 'signup';
     return `
       <div class="gcse-auth-brand"><span class="gcse-auth-brand-mark">S</span><div><strong>GCSE Science</strong><span>Your learning account</span></div></div>
       <span class="gcse-auth-eyebrow">${signup ? 'Create account' : 'Welcome back'}</span>
       <h2 id="gcseAuthTitle">${signup ? 'Sign up to GCSE Science' : 'Sign in to your account'}</h2>
-      <p class="gcse-auth-lead">${signup ? 'Use your email address and create a password. Your account will be ready for progress, subscriptions and future course features.' : 'Sign in with the email and password you used when you created your account.'}</p>
+      <p class="gcse-auth-lead">${signup ? 'Use your email address and create a password. If you already use the same account on another connected course, sign in with that existing account instead.' : 'Sign in with the email and password you used when you created your account.'}</p>
       <div class="gcse-auth-switch" role="tablist" aria-label="Account action">
         <button type="button" data-auth-mode="signin" class="${signup ? '' : 'active'}">Sign in</button>
         <button type="button" data-auth-mode="signup" class="${signup ? 'active' : ''}">Sign up</button>
       </div>
       <form id="gcseAuthForm" class="gcse-auth-form" novalidate>
-        <label>Email address<input id="gcseAuthEmail" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+        <label>Email address<input id="gcseAuthEmail" type="email" autocomplete="email" required placeholder="you@example.com" value="${escapeHtml(state.pendingEmail)}"></label>
         <label>Password<input id="gcseAuthPassword" type="password" autocomplete="${signup ? 'new-password' : 'current-password'}" required minlength="8" placeholder="At least 8 characters"></label>
         ${signup ? '<label>Confirm password<input id="gcseAuthPasswordConfirm" type="password" autocomplete="new-password" required minlength="8" placeholder="Re-enter your password"></label>' : ''}
         <div id="gcseAuthMessage" class="gcse-auth-message" hidden></div>
         <button id="gcseAuthSubmit" class="gcse-auth-submit" type="submit">${signup ? 'Create account' : 'Sign in'}</button>
+        ${signup ? `<div id="gcseAuthEmailActions" hidden>
+          <button id="gcseResendConfirmation" class="gcse-auth-secondary" type="button">Resend confirmation email</button>
+          <button id="gcseUseExistingAccount" class="gcse-auth-secondary" type="button">Sign in instead</button>
+        </div>` : ''}
       </form>
       <p class="gcse-auth-fineprint">Passwords are handled by secure authentication and are never stored in the GCSE course code.</p>`;
   }
@@ -161,6 +200,14 @@
       <button id="gcseSignOut" class="gcse-auth-secondary" type="button">Sign out</button>`;
   }
 
+  function bindEmailActions() {
+    document.getElementById('gcseResendConfirmation')?.addEventListener('click', resendConfirmation);
+    document.getElementById('gcseUseExistingAccount')?.addEventListener('click', () => {
+      state.mode = 'signin';
+      renderModal();
+    });
+  }
+
   function renderModal() {
     const content = document.getElementById('gcseAuthContent');
     if (!content) return;
@@ -168,6 +215,7 @@
     if (state.mode === 'account' && state.session) {
       content.innerHTML = accountView();
       document.getElementById('gcseSignOut')?.addEventListener('click', signOut);
+      window.dispatchEvent(new CustomEvent('gcse-auth-account-rendered', { detail: { profile: state.profile } }));
       return;
     }
 
@@ -177,6 +225,7 @@
       renderModal();
     }));
     document.getElementById('gcseAuthForm')?.addEventListener('submit', handleAuthSubmit);
+    bindEmailActions();
     setTimeout(() => document.getElementById('gcseAuthEmail')?.focus(), 0);
   }
 
@@ -185,7 +234,7 @@
 
     const existing = await client
       .from('gcse_profiles')
-      .select('user_id,email,plan,subscription_status,trial_ends_at,created_at')
+      .select(PROFILE_FIELDS)
       .eq('user_id', user.id)
       .maybeSingle();
 
@@ -198,7 +247,7 @@
     const inserted = await client
       .from('gcse_profiles')
       .insert({ user_id: user.id, email: user.email || '' })
-      .select('user_id,email,plan,subscription_status,trial_ends_at,created_at')
+      .select(PROFILE_FIELDS)
       .single();
 
     if (inserted.error) {
@@ -232,6 +281,31 @@
     }
   }
 
+  async function resendConfirmation() {
+    const emailInput = document.getElementById('gcseAuthEmail');
+    const email = (emailInput?.value || state.pendingEmail || '').trim();
+    const button = document.getElementById('gcseResendConfirmation');
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+      setMessage('Enter the email address you used for the account first.', 'error');
+      return;
+    }
+
+    state.pendingEmail = email;
+    setBusy(button, true, 'Sending…');
+    const { error } = await client.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: confirmationRedirect() }
+    });
+    setBusy(button, false);
+
+    if (error) {
+      setMessage(friendlyAuthError(error), 'error');
+      return;
+    }
+    setMessage('Confirmation email requested. Check your inbox and spam folder. If this address is already confirmed, sign in instead.', 'success');
+  }
+
   async function handleAuthSubmit(event) {
     event.preventDefault();
     const email = document.getElementById('gcseAuthEmail')?.value.trim();
@@ -247,26 +321,46 @@
       return;
     }
 
+    state.pendingEmail = email;
+
     if (state.mode === 'signup') {
       const confirm = document.getElementById('gcseAuthPasswordConfirm')?.value || '';
       if (password !== confirm) {
         setMessage('The two passwords do not match.', 'error');
         return;
       }
+
       setBusy(submit, true, 'Creating account…');
-      const { data, error } = await client.auth.signUp({ email, password });
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: confirmationRedirect() }
+      });
       setBusy(submit, false);
+
       if (error) {
-        setMessage(error.message || 'We could not create that account.', 'error');
+        setMessage(friendlyAuthError(error), 'error');
+        showEmailActions(true);
         return;
       }
+
+      const identities = data?.user?.identities;
+      const looksLikeExistingAccount = Array.isArray(identities) && identities.length === 0;
+
+      if (looksLikeExistingAccount) {
+        setMessage('This email already belongs to an account in the connected Supabase account system, so Supabase does not send another signup email. Sign in with the existing password, or use Resend confirmation if the address was never confirmed.', 'info');
+        showEmailActions(true);
+        return;
+      }
+
       if (data.session) {
         await applySession(data.session);
         state.mode = 'account';
         renderModal();
         setMessage('Account created. You are signed in.', 'success');
       } else {
-        setMessage('Account created. Check your email to confirm the address, then return here and sign in.', 'success');
+        setMessage('Account created. A confirmation email has been requested. Check your inbox and spam folder, then return here and sign in.', 'success');
+        showEmailActions(true);
       }
       return;
     }
@@ -275,7 +369,7 @@
     const { data, error } = await client.auth.signInWithPassword({ email, password });
     setBusy(submit, false);
     if (error) {
-      setMessage(error.message || 'Sign in failed. Check your email and password.', 'error');
+      setMessage(friendlyAuthError(error) || 'Sign in failed. Check your email and password.', 'error');
       return;
     }
     await applySession(data.session);
@@ -311,8 +405,13 @@
   window.GCSE_AUTH = {
     open: () => openModal(state.session ? 'account' : 'signin'),
     openSignUp: () => openModal('signup'),
+    resendConfirmation: email => {
+      state.pendingEmail = String(email || '').trim();
+      return client.auth.resend({ type: 'signup', email: state.pendingEmail, options: { emailRedirectTo: confirmationRedirect() } });
+    },
     getSession: () => state.session,
     getProfile: () => state.profile,
+    getConfirmationRedirect: confirmationRedirect,
     client
   };
 
