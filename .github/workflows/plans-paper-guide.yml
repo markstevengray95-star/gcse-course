@@ -19,8 +19,11 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check plans-paper-guide.js
+          node --check gcse-auth.js
           node --check gcse-billing-ui.js
           node --check course-audit-fixes.js
+      - name: Audit Supabase signup emails
+        run: node tests/auth-email-integration-audit.mjs
       - name: Audit plans and paper guide
         run: node tests/plans-paper-guide-audit.mjs
       - name: Audit subscription and admin controls
