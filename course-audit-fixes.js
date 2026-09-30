@@ -39,7 +39,6 @@
     if(document.querySelector('script[data-gcse-auth-script]')) return;
     const script=document.createElement('script');
     script.src='gcse-auth.js';
-    script.defer=true;
     script.dataset.gcseAuthScript='true';
     document.body.appendChild(script);
   };
@@ -48,8 +47,6 @@
   }else if(!document.querySelector('script[data-gcse-supabase]')){
     const supabaseScript=document.createElement('script');
     supabaseScript.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js';
-    supabaseScript.integrity='sha256-';
-    supabaseScript.crossOrigin='anonymous';
     supabaseScript.dataset.gcseSupabase='true';
     supabaseScript.onload=loadAuth;
     supabaseScript.onerror=()=>console.error('[GCSE Auth] Could not load the authentication library.');
