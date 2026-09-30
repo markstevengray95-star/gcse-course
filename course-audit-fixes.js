@@ -27,7 +27,7 @@
   if(typeof renderHome==='function'&&document.getElementById('homeView')&&!document.getElementById('homeView').hidden) renderHome();
   if(typeof renderTopic==='function'&&document.getElementById('topicView')&&!document.getElementById('topicView').hidden) renderTopic();
 
-  // Load the account system without changing the main course boot order.
+  // Load the account system and Supabase-backed learning-data sync without changing the main course boot order.
   if(!document.querySelector('link[data-gcse-auth-style]')){
     const style=document.createElement('link');
     style.rel='stylesheet';
@@ -35,13 +35,27 @@
     style.dataset.gcseAuthStyle='true';
     document.head.appendChild(style);
   }
+
+  const loadCloudSync=()=>{
+    if(document.querySelector('script[data-gcse-cloud-sync]')) return;
+    const sync=document.createElement('script');
+    sync.src='gcse-cloud-sync.js';
+    sync.dataset.gcseCloudSync='true';
+    document.body.appendChild(sync);
+  };
+
   const loadAuth=()=>{
-    if(document.querySelector('script[data-gcse-auth-script]')) return;
+    if(document.querySelector('script[data-gcse-auth-script]')){
+      if(window.GCSE_AUTH) loadCloudSync();
+      return;
+    }
     const script=document.createElement('script');
     script.src='gcse-auth.js';
     script.dataset.gcseAuthScript='true';
+    script.onload=loadCloudSync;
     document.body.appendChild(script);
   };
+
   if(window.supabase?.createClient){
     loadAuth();
   }else if(!document.querySelector('script[data-gcse-supabase]')){
