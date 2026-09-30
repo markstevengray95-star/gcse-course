@@ -1,0 +1,28 @@
+name: GCSE Plans and Paper Guide
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-plans-paper-guide:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check plans-paper-guide.js
+          node --check course-audit-fixes.js
+      - name: Audit plans and paper guide
+        run: node tests/plans-paper-guide-audit.mjs
+      - name: Run course integrity
+        run: node tests/integrity.mjs
+      - name: Run full AQA audit
+        run: node tests/full-audit.mjs
