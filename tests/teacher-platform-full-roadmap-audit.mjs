@@ -15,6 +15,7 @@ const loader = read('course-audit-fixes.js');
 const fixes = read('teacher-platform-audit-fixes.js');
 const phase2Css = read('teacher-dashboard-phase2.css');
 const migration = read('supabase/migrations/20261001161000_gcse_teacher_platform_full_audit_hardening.sql');
+const readPolicyMigration = read('supabase/migrations/20261001162500_gcse_teacher_platform_read_policy_cleanup.sql');
 const phase8to17 = read('teacher-suite-phases8-17.js');
 
 const phaseAudits = [
@@ -67,6 +68,16 @@ contains(fixes, 'data-phase3-homework-overdue', 'Phase 2 includes live overdue-s
 contains(fixes, 'data-phase4-assessments', 'Phase 2 includes live upcoming-assessment card');
 contains(phase2Css, 'grid-template-columns:repeat(4,minmax(0,1fr))', 'Phase 2 desktop layout fits all four work cards');
 contains(phase2Css, '@media(max-width:960px)', 'Phase 2 work cards stay responsive');
+
+// Consolidated teacher/student SELECT policies avoid duplicate permissive checks while keeping both access paths.
+for (const policy of ['gcse_assignments_select','gcse_assignment_targets_select','gcse_assignment_submissions_select','gcse_assessment_attempts_select']) {
+  contains(readPolicyMigration, `create policy ${policy}`, `${policy} is consolidated`);
+}
+contains(readPolicyMigration, 'student_id=(select auth.uid())', 'consolidated policies preserve student self-read access');
+contains(readPolicyMigration, 'teacher_id=(select auth.uid())', 'consolidated policies preserve teacher ownership access');
+contains(readPolicyMigration, 'private.gcse_has_teacher_access()', 'consolidated teacher reads still require Teacher access');
+contains(readPolicyMigration, "status='published'", 'student assignment reads still require published work');
+contains(readPolicyMigration, 'available_from<=now()', 'student assignment reads still enforce release time');
 
 // Phases 8 and 11: writes and class ownership.
 contains(migration, 'revoke insert, update, delete on table public.gcse_live_classroom_sessions', 'live session writes are RPC-only');
