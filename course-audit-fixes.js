@@ -48,12 +48,14 @@
   addStyle('data-gcse-teacher-assessment-style','teacher-assessments.css');
   addStyle('data-gcse-teacher-assessment-analytics-style','teacher-assessment-analytics.css');
   addStyle('data-gcse-teacher-interventions-style','teacher-interventions.css');
+  addStyle('data-gcse-teacher-suite-style','teacher-suite-phases8-17.css');
   addScript('data-gcse-billing-script','gcse-billing-ui.js');
   addScript('data-gcse-access-script','gcse-access-control.js');
   addScript('data-gcse-revision-intelligence-script','revision-intelligence.js',()=>addScript('data-gcse-real-exam-script','real-exam-mocks.js'));
   addScript('data-gcse-exam-revision-bridge','exam-studio-revision-bridge.js');
   addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>{
     addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js');
+    addScript('data-gcse-teacher-suite-script','teacher-suite-phases8-17.js');
     addScript('data-gcse-teacher-homework-script','teacher-homework.js',()=>{
       addScript('data-gcse-teacher-adaptive-homework-script','teacher-adaptive-homework.js');
       addScript('data-gcse-teacher-homework-sync','teacher-homework-autoload.js');
