@@ -30,6 +30,7 @@ jobs:
           node --check teacher-homework.js
           node --check teacher-homework-autoload.js
           node --check teacher-assessments.js
+          node --check teacher-assessment-revision-bridge.js
           node --check course-audit-fixes.js
       - name: Audit Supabase signup emails
         run: node tests/auth-email-integration-audit.mjs
