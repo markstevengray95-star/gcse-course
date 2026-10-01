@@ -20,7 +20,7 @@
 
   async function secureHomeworkStatus(assignmentId, status, button) {
     const client = sb();
-    if (!client || !uid()) return;
+    if (!client || !uid()) return false;
     const oldText = button?.textContent || '';
     if (button) {
       button.disabled = true;
@@ -43,15 +43,17 @@
       studentMessage(friendly, 'error');
       return false;
     }
-    studentMessage(status === 'submitted' ? 'Homework marked as submitted.' : '', 'success');
-    window.dispatchEvent(new CustomEvent('gcse-homework-status-changed', { detail: { assignmentId, status } }));
-    window.dispatchEvent(new Event('gcse-auth-account-rendered'));
     return true;
   }
 
   function interceptOrdinaryHomework(event) {
     const button = event.target.closest?.('[data-homework-start],[data-homework-submit]');
-    if (!button || button.dataset.auditHandling === 'true') return;
+    if (!button) return;
+    if (button.dataset.auditBypass === 'true') {
+      button.dataset.auditBypass = '';
+      return;
+    }
+    if (button.dataset.auditHandling === 'true') return;
 
     // Phase 6 registers its capture listener before this script. Intervention buttons are
     // consumed there with stopImmediatePropagation, so only ordinary homework reaches here.
@@ -70,15 +72,17 @@
 
     secureHomeworkStatus(assignmentId, isSubmit ? 'submitted' : 'in_progress', button)
       .then(ok => {
-        if (ok && !isSubmit) {
-          // Re-use the existing course-opening behaviour only after the secure status write.
-          const card = button.closest('.student-homework-card');
-          const title = card?.querySelector('strong')?.textContent?.trim();
-          if (title) {
-            const openButton = card.querySelector('[data-homework-start]');
-            openButton?.setAttribute('data-secure-start-complete', 'true');
-          }
+        if (!ok) return;
+        window.dispatchEvent(new CustomEvent('gcse-homework-status-changed', { detail: { assignmentId, status:isSubmit?'submitted':'in_progress' } }));
+        if (isSubmit) {
+          studentMessage('Homework marked as submitted.', 'success');
+          window.dispatchEvent(new Event('gcse-auth-account-rendered'));
+          return;
         }
+        // Let the legacy handler perform only its navigation step. Its old direct table write
+        // is denied by the database, while the secure RPC above has already saved the status.
+        button.dataset.auditBypass = 'true';
+        button.click();
       })
       .finally(() => { button.dataset.auditHandling = ''; });
   }
@@ -167,7 +171,6 @@
   }
 
   function boot() {
-    // Capture phase ensures the legacy direct-write handler never performs the mutation.
     document.addEventListener('click', interceptOrdinaryHomework, true);
     window.addEventListener('gcse-auth-account-rendered', decorate);
     window.addEventListener('gcse-auth-changed', decorate);
