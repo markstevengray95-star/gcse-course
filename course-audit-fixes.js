@@ -52,7 +52,7 @@
   addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>{
     addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js');
     addScript('data-gcse-teacher-homework-script','teacher-homework.js',()=>addScript('data-gcse-teacher-homework-sync','teacher-homework-autoload.js'));
-    addScript('data-gcse-teacher-assessment-script','teacher-assessments.js');
+    addScript('data-gcse-teacher-assessment-script','teacher-assessments.js',()=>addScript('data-gcse-teacher-assessment-revision-bridge','teacher-assessment-revision-bridge.js'));
   });
 
   const loadCloudSync=()=>addScript('data-gcse-cloud-sync','gcse-cloud-sync.js');
