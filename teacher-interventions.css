@@ -1,0 +1,66 @@
+body.gcse-intervention-running{overflow:hidden}
+.gcse-intervention-modal,.gcse-intervention-run-modal{position:fixed;inset:0;z-index:10040}
+.gcse-intervention-modal[hidden],.gcse-intervention-run-modal[hidden]{display:none!important}
+.gcse-intervention-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.58);backdrop-filter:blur(4px)}
+.gcse-intervention-dialog{position:relative;width:min(760px,calc(100% - 28px));max-height:calc(100vh - 34px);margin:17px auto;background:#fff;border-radius:22px;box-shadow:0 28px 80px rgba(15,23,42,.28);overflow:auto}
+.gcse-intervention-dialog.teacher{width:min(1120px,calc(100% - 28px))}
+.gcse-intervention-dialog>header,.gcse-intervention-run-shell>header{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding:22px 24px;border-bottom:1px solid #e5e7eb;background:linear-gradient(135deg,#f8fafc,#eef2ff)}
+.gcse-intervention-dialog>header h2,.gcse-intervention-run-shell>header h2{margin:3px 0 4px;font-size:1.45rem}
+.gcse-intervention-dialog>header p{margin:0;color:#64748b}
+.gcse-intervention-dialog>header>button,.gcse-intervention-run-shell>header>button{border:0;background:#fff;border-radius:999px;width:38px;height:38px;font-size:1.35rem;cursor:pointer;box-shadow:0 1px 4px rgba(15,23,42,.12)}
+.gcse-intervention-body,[data-intervention-create-body]{padding:22px 24px}
+.gcse-intervention-source{display:grid;gap:4px;padding:14px 16px;border:1px solid #dbeafe;background:#eff6ff;border-radius:14px;margin-bottom:18px}
+.gcse-intervention-source span{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#1d4ed8}
+.gcse-intervention-source strong{font-size:1.05rem}.gcse-intervention-source small{color:#64748b}
+.gcse-intervention-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.gcse-intervention-form label{display:grid;gap:7px;font-weight:700;color:#334155}
+.gcse-intervention-form label small{font-weight:400;color:#64748b}
+.gcse-intervention-form .wide{grid-column:1/-1}
+.gcse-intervention-form input,.gcse-intervention-form select{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:10px 12px;background:#fff;color:#0f172a}
+.gcse-intervention-explainer{display:grid;gap:6px;padding:14px 16px;border-radius:14px;background:#f8fafc;border:1px solid #e2e8f0}
+.gcse-intervention-explainer span{font-size:.9rem;color:#475569}
+.gcse-intervention-actions{display:flex;gap:10px;flex-wrap:wrap}
+.gcse-intervention-message{padding:10px 12px;border-radius:10px;background:#f1f5f9;color:#334155}
+.gcse-intervention-message.error{background:#fef2f2;color:#991b1b}.gcse-intervention-message.success{background:#ecfdf5;color:#065f46}
+.phase6-create-intervention{margin-left:8px}
+.teacher-interventions-open{border:1px solid rgba(255,255,255,.32);background:rgba(255,255,255,.12);color:inherit;border-radius:9px;padding:8px 11px;cursor:pointer}
+.gcse-intervention-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.gcse-intervention-kpis article{display:grid;gap:3px;padding:13px;border:1px solid #e2e8f0;border-radius:13px;background:#f8fafc}
+.gcse-intervention-kpis span,.gcse-intervention-kpis small{color:#64748b;font-size:.78rem}.gcse-intervention-kpis strong{font-size:1.35rem;color:#0f172a}
+.gcse-intervention-teacher-list{display:grid;gap:14px}
+.gcse-intervention-teacher-card{border:1px solid #e2e8f0;border-radius:16px;padding:16px;background:#fff}
+.gcse-intervention-card-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.gcse-intervention-card-head>div{display:grid;gap:4px}.gcse-intervention-card-head span{font-size:.78rem;color:#4f46e5;font-weight:800;text-transform:uppercase;letter-spacing:.04em}.gcse-intervention-card-head strong{font-size:1.04rem}.gcse-intervention-card-head small{color:#64748b}
+.gcse-intervention-state{font-size:.72rem;text-transform:uppercase;padding:5px 8px;border-radius:999px;background:#f1f5f9;color:#475569}.gcse-intervention-state.published{background:#ecfdf5;color:#047857}.gcse-intervention-state.draft{background:#fffbeb;color:#b45309}
+.gcse-intervention-impact{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0;padding:10px 12px;border-radius:12px;background:#f8fafc}
+.gcse-intervention-impact span{font-size:.82rem;color:#475569}.gcse-intervention-impact>strong{margin-left:auto;color:#1e293b;font-size:.88rem}
+.gcse-intervention-note{font-size:.82rem;color:#64748b;margin:8px 0 12px}
+.gcse-intervention-card-actions{display:flex;gap:8px;flex-wrap:wrap}
+.gcse-intervention-students-table{margin-top:14px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}
+.gcse-intervention-student-row{display:grid;grid-template-columns:minmax(170px,2fr) repeat(4,minmax(80px,1fr));gap:8px;align-items:center;padding:10px 12px;border-top:1px solid #e2e8f0;font-size:.84rem}
+.gcse-intervention-student-row:first-child{border-top:0}.gcse-intervention-student-row.header{background:#f8fafc;font-size:.72rem;font-weight:800;text-transform:uppercase;color:#64748b}
+.gcse-intervention-student-row>span:first-child{display:grid;gap:2px}.gcse-intervention-student-row small{color:#94a3b8}
+.student-intervention-panel{margin:14px 0;padding:14px;border:1px solid #c7d2fe;border-radius:16px;background:linear-gradient(145deg,#f8fafc,#eef2ff)}
+.student-intervention-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:10px}.student-intervention-head h3{margin:2px 0}.student-intervention-head p{margin:3px 0;color:#64748b;font-size:.86rem}.student-intervention-head>strong{display:grid;place-items:center;min-width:34px;height:34px;border-radius:999px;background:#4f46e5;color:#fff}
+.student-intervention-list{display:grid;gap:9px}.student-intervention-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;background:#fff;border:1px solid #e2e8f0}.student-intervention-card>div{display:grid;gap:3px}.student-intervention-card span{font-size:.74rem;color:#4f46e5;font-weight:700}.student-intervention-card p,.student-intervention-card small{margin:0;color:#64748b;font-size:.8rem}.student-intervention-card button{border:0;border-radius:9px;background:#4f46e5;color:#fff;padding:9px 12px;cursor:pointer;font-weight:700}
+.gcse-intervention-run-modal{background:rgba(15,23,42,.63);padding:18px;overflow:auto}
+.gcse-intervention-run-shell{width:min(900px,100%);margin:0 auto;background:#fff;border-radius:20px;box-shadow:0 25px 70px rgba(15,23,42,.28);overflow:hidden}
+.gcse-intervention-run-shell>[data-intervention-run-body]{padding:22px}
+.student-intervention-guidance{padding:13px 15px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;margin-bottom:16px}.student-intervention-guidance p{margin:5px 0 0;color:#475569}
+.student-intervention-tasks{display:grid;gap:15px}.student-intervention-task{border:1px solid #e2e8f0;border-radius:15px;padding:16px}.student-intervention-task.practice{background:#fafafa}.student-intervention-task.retest{border-color:#c7d2fe;background:#fff}
+.student-intervention-task-title{display:flex;justify-content:space-between;gap:10px;color:#4f46e5;font-size:.78rem;font-weight:800;text-transform:uppercase}.student-intervention-task h3{font-size:1rem;margin:10px 0}.student-intervention-task p{color:#475569}.student-intervention-task blockquote{margin:10px 0;padding:11px 13px;border-left:4px solid #94a3b8;background:#f1f5f9;color:#475569}.student-intervention-task blockquote span{display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;color:#64748b;margin-bottom:4px}
+.student-intervention-task ul{color:#475569;font-size:.88rem}.student-intervention-task textarea{width:100%;box-sizing:border-box;border:1px solid #cbd5e1;border-radius:10px;padding:11px;resize:vertical;font:inherit}
+.student-intervention-options{display:grid;gap:8px}.student-intervention-options label{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid #e2e8f0;border-radius:10px;cursor:pointer}
+.student-intervention-submit{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:18px;padding-top:15px;border-top:1px solid #e2e8f0}.student-intervention-submit span{color:#64748b;font-size:.84rem}
+.student-intervention-result{padding:20px;border-radius:16px;background:linear-gradient(135deg,#eef2ff,#f0fdf4);text-align:center}.student-intervention-result>span{font-size:.76rem;text-transform:uppercase;font-weight:800;color:#4f46e5}.student-intervention-result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.student-intervention-result-grid article{display:grid;gap:5px;padding:13px;background:#fff;border:1px solid #e2e8f0;border-radius:12px}.student-intervention-result-grid small{color:#64748b}.student-intervention-result-grid strong{font-size:1.5rem}.student-intervention-result p{margin:8px 0;color:#475569}
+.student-intervention-review{margin-top:17px}.student-intervention-review>article{border:1px solid #e2e8f0;border-radius:12px;padding:13px;margin-top:9px}.student-intervention-review>article>div{display:flex;justify-content:space-between}.student-intervention-review p,.student-intervention-review li{font-size:.86rem;color:#475569}
+@media(max-width:760px){
+  .gcse-intervention-dialog,.gcse-intervention-dialog.teacher{width:calc(100% - 14px);margin:7px auto;max-height:calc(100vh - 14px);border-radius:16px}
+  .gcse-intervention-dialog>header,.gcse-intervention-run-shell>header{padding:16px}
+  .gcse-intervention-body,[data-intervention-create-body],.gcse-intervention-run-shell>[data-intervention-run-body]{padding:14px}
+  .gcse-intervention-form{grid-template-columns:1fr}.gcse-intervention-form .wide{grid-column:auto}
+  .gcse-intervention-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gcse-intervention-student-row{grid-template-columns:1.6fr .7fr .7fr}.gcse-intervention-student-row>span:nth-child(4),.gcse-intervention-student-row>span:nth-child(5){display:none}
+  .student-intervention-card{align-items:flex-start;flex-direction:column}.student-intervention-card button{width:100%}
+  .student-intervention-submit{align-items:stretch;flex-direction:column}.student-intervention-submit button{width:100%}
+}
