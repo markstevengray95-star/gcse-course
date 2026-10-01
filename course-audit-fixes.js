@@ -44,6 +44,7 @@
   addStyle('data-gcse-teacher-platform-style','teacher-platform.css');
   addStyle('data-gcse-teacher-dashboard-style','teacher-dashboard-phase2.css');
   addStyle('data-gcse-teacher-homework-style','teacher-homework.css');
+  addStyle('data-gcse-teacher-adaptive-homework-style','teacher-adaptive-homework.css');
   addStyle('data-gcse-teacher-assessment-style','teacher-assessments.css');
   addStyle('data-gcse-teacher-assessment-analytics-style','teacher-assessment-analytics.css');
   addStyle('data-gcse-teacher-interventions-style','teacher-interventions.css');
@@ -53,7 +54,10 @@
   addScript('data-gcse-exam-revision-bridge','exam-studio-revision-bridge.js');
   addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>{
     addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js');
-    addScript('data-gcse-teacher-homework-script','teacher-homework.js',()=>addScript('data-gcse-teacher-homework-sync','teacher-homework-autoload.js'));
+    addScript('data-gcse-teacher-homework-script','teacher-homework.js',()=>{
+      addScript('data-gcse-teacher-adaptive-homework-script','teacher-adaptive-homework.js');
+      addScript('data-gcse-teacher-homework-sync','teacher-homework-autoload.js');
+    });
     addScript('data-gcse-teacher-assessment-script','teacher-assessments.js',()=>{
       addScript('data-gcse-teacher-assessment-revision-bridge','teacher-assessment-revision-bridge.js');
       addScript('data-gcse-teacher-assessment-analytics-script','teacher-assessment-analytics.js',()=>{
