@@ -50,7 +50,7 @@
   addScript('data-gcse-exam-revision-bridge','exam-studio-revision-bridge.js');
   addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>{
     addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js');
-    addScript('data-gcse-teacher-homework-script','teacher-homework.js');
+    addScript('data-gcse-teacher-homework-script','teacher-homework.js',()=>addScript('data-gcse-teacher-homework-sync','teacher-homework-autoload.js'));
   });
 
   const loadCloudSync=()=>addScript('data-gcse-cloud-sync','gcse-cloud-sync.js');
