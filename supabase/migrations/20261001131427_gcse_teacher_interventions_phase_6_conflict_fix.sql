@@ -1,0 +1,3 @@
+-- Phase 6 production hotfix history.
+-- The assignment-target conflict ambiguity is folded into the final RPC definition in
+-- 20261001131946_gcse_teacher_interventions_phase_6_rpc_alignment.sql.
