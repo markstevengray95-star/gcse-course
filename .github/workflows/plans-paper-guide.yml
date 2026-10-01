@@ -35,6 +35,7 @@ jobs:
           node --check teacher-assessment-analytics.js
           node --check teacher-interventions.js
           node --check teacher-suite-phases8-17.js
+          node --check teacher-suite-live-enhancements.js
           node --check course-audit-fixes.js
       - name: Audit Supabase signup emails
         run: node tests/auth-email-integration-audit.mjs
