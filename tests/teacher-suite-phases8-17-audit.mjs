@@ -8,13 +8,16 @@ const must = (condition,message) => {
 const contains = (text,value,message) => must(text.includes(value),message);
 
 const js = read('teacher-suite-phases8-17.js');
+const enhancements = read('teacher-suite-live-enhancements.js');
 const css = read('teacher-suite-phases8-17.css');
 const loader = read('course-audit-fixes.js');
 const schema = read('supabase/migrations/20261001153000_gcse_teacher_suite_phases_8_17_schema.sql');
 const rpc = read('supabase/migrations/20261001153100_gcse_teacher_suite_phases_8_17_rpcs.sql');
+const accuracy = read('supabase/migrations/20261001154500_gcse_teacher_suite_phases_8_17_accuracy_indexes.sql');
 
 contains(loader,'teacher-suite-phases8-17.css','Teacher Suite styles are loaded');
 contains(loader,'teacher-suite-phases8-17.js','Teacher Suite client is loaded');
+contains(loader,'teacher-suite-live-enhancements.js','Teacher Suite live enhancements are loaded after the main suite');
 contains(js,"['live','8','Live Classroom']",'Phase 8 Live Classroom is registered');
 contains(js,"['resources','9','Resource Generator']",'Phase 9 Resource Generator is registered');
 contains(js,"['planning','10','Lesson Planning']",'Phase 10 Lesson Planning is registered');
@@ -33,6 +36,8 @@ for (const fn of ['gcse_start_live_classroom','gcse_update_live_classroom','gcse
 contains(js,'data-student-live-classroom','students get a live-classroom join surface');
 contains(rpc,'class_membership_required','live responses require class membership');
 contains(rpc,"m.status='joined'",'live session join is scoped to joined students');
+contains(enhancements,'data-live-student-refresh','students can refresh to receive the teacher’s next live activity');
+contains(enhancements,'joinForm.requestSubmit()','student activity refresh re-checks the authenticated live session');
 
 for (const type of ['retrieval','worksheet','exit_ticket','homework','practical','revision']) contains(js,`type==='${type}'`,`Phase 9 generates ${type} resources`);
 contains(js,'gcse_teacher_resources','Phase 9 resources persist to Supabase');
@@ -46,20 +51,26 @@ for (const mode of ['normal','blackout','question','answer']) contains(schema,`'
 contains(js,'slide_index','Phase 11 controls slide position');
 contains(js,'timer_ends_at','Phase 11 controls a classroom timer');
 contains(js,'Open course presentation','Phase 11 links presentation controls back to course content');
+contains(enhancements,'setInterval(tick,1000)','Phase 11 classroom timer visibly ticks every second');
+contains(enhancements,"gcse_presentation_sessions",'timer enhancement restores the live timer after a UI render');
 
 contains(js,'gcse_intervention_dashboard','Phase 12 uses server-side intervention analytics');
 contains(rpc,'private.gcse_intervention_attempts','Phase 12 reads intervention evidence server-side');
 contains(js,'Avg improvement','Phase 12 shows improvement evidence');
+contains(accuracy,'count(distinct i.id)','Phase 12 active intervention count is not multiplied by student targets');
 
 contains(js,'gcse_build_teacher_report','Phase 13 builds reports server-side');
 contains(js,'Export CSV','Phase 13 supports CSV export');
 contains(rpc,"'assessmentAverage'",'Phase 13 report includes assessment evidence');
 contains(rpc,"'homeworkSubmitted'",'Phase 13 report includes homework evidence');
+contains(accuracy,"ga.audience_mode='class'",'Phase 13 homework totals only include work actually assigned to a student');
+contains(accuracy,'public.gcse_assignment_targets gt','Phase 13 selected-student homework is counted accurately');
 
 contains(js,'gcse_build_parent_summary','Phase 14 builds parent summaries server-side');
 contains(schema,'private.gcse_parent_summaries','Phase 14 summaries are stored in the private schema');
 contains(schema,'revoke all on table private.gcse_parent_summaries from public,anon,authenticated','parent summary table is not directly browser-readable');
 contains(rpc,'not an official predicted grade','parent summary labels evidence appropriately');
+contains(accuracy,"homeworkRecorded",'Phase 14 uses the refined assigned-homework total');
 
 contains(js,'gcse_create_department','Phase 15 can create departments');
 contains(js,'gcse_department_add_teacher','Phase 15 can add explicit teacher members');
@@ -85,8 +96,10 @@ for (const table of [
 contains(schema,'enable row level security','new public teacher-suite tables use RLS');
 contains(rpc,'private.gcse_has_teacher_access()','teacher RPCs validate teacher access');
 contains(rpc,'private.gcse_has_school_admin_access()','school creation validates school-admin access');
+for(const index of ['gcse_live_responses_class_idx','gcse_live_responses_teacher_idx','gcse_parent_summaries_student_idx','gcse_collaboration_comments_department_idx','gcse_schools_owner_idx']) contains(accuracy,index,`${index} is versioned for release performance`);
 
 contains(css,'.teacher-suite-modal','Teacher Suite modal is styled');
+contains(css,'body.teacher-suite-open{overflow:hidden}','Teacher Suite correctly locks background scrolling while open');
 contains(css,'@media(max-width:600px)','Teacher Suite has mobile layout rules');
 contains(css,'.student-live-classroom','student live-classroom panel is styled');
 
