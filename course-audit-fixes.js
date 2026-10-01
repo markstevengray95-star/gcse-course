@@ -63,7 +63,9 @@
     addScript('data-gcse-teacher-assessment-script','teacher-assessments.js',()=>{
       addScript('data-gcse-teacher-assessment-revision-bridge','teacher-assessment-revision-bridge.js');
       addScript('data-gcse-teacher-assessment-analytics-script','teacher-assessment-analytics.js',()=>{
-        addScript('data-gcse-teacher-interventions-script','teacher-interventions.js');
+        addScript('data-gcse-teacher-interventions-script','teacher-interventions.js',()=>{
+          addScript('data-gcse-teacher-platform-audit-fixes','teacher-platform-audit-fixes.js');
+        });
       });
     });
   });
