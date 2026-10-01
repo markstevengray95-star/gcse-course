@@ -1,0 +1,2 @@
+comment on function public.gcse_fetch_assessment_key(uuid) is 'Service-role-only helper used by the GCSE assessment platform. Never grant to browser roles.';
+comment on function public.gcse_store_assessment_key(uuid,uuid,jsonb) is 'Service-role-only helper used by the GCSE assessment platform. Never grant to browser roles.';
