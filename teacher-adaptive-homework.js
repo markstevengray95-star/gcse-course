@@ -186,7 +186,8 @@
       const counts=routeCounts(a.id);
       let summary=card.querySelector('[data-adaptive-summary]');
       if(!summary){summary=document.createElement('div');summary.dataset.adaptiveSummary='true';summary.className='adaptive-card-summary';card.querySelector('.teacher-homework-progress')?.insertAdjacentElement('beforebegin',summary);}
-      summary.innerHTML=`<span class="adaptive-badge">Adaptive</span><span><b>${counts.support}</b> Support</span><span><b>${counts.core}</b> Core</span><span><b>${counts.stretch}</b> Stretch</span>`;
+      const summaryHtml=`<span class="adaptive-badge">Adaptive</span><span><b>${counts.support}</b> Support</span><span><b>${counts.core}</b> Core</span><span><b>${counts.stretch}</b> Stretch</span>`;
+      if(summary.innerHTML!==summaryHtml) summary.innerHTML=summaryHtml;
       const actions=card.querySelector('.teacher-homework-card-actions');
       if(actions&&!actions.querySelector('[data-adaptive-manage]')){
         const btn=document.createElement('button');btn.type='button';btn.className='button';btn.dataset.adaptiveManage=a.id;btn.textContent='Manage routes';btn.addEventListener('click',()=>openManage(a.id));actions.prepend(btn);
@@ -249,7 +250,7 @@
     clearTimeout(decorateTimer);decorateTimer=setTimeout(async()=>{
       if(state.decorating)return;state.decorating=true;
       try{ensureAdaptiveForm();await decorateTeacherCards();await decorateStudentCards();}catch(error){console.warn('[Adaptive Homework]',error);}finally{state.decorating=false;}
-    },30);
+    },80);
   }
 
   document.addEventListener('submit',event=>{
@@ -258,12 +259,18 @@
     event.preventDefault();event.stopImmediatePropagation();createAdaptive(form);
   },true);
 
+  function isRelevantMutation(mutations){
+    const selector='[data-homework-form],[data-student-homework],.teacher-homework-card';
+    return mutations.some(m=>[...m.addedNodes].some(node=>node.nodeType===1&&(node.matches?.(selector)||node.querySelector?.(selector))));
+  }
+
   function boot(){
     ensureAdaptiveForm();scheduleDecorate();
     window.addEventListener('gcse-auth-changed',scheduleDecorate);
     window.addEventListener('gcse-access-changed',scheduleDecorate);
     window.addEventListener('gcse-auth-account-rendered',scheduleDecorate);
-    const observer=new MutationObserver(scheduleDecorate);observer.observe(document.body,{childList:true,subtree:true});
+    const observer=new MutationObserver(mutations=>{if(isRelevantMutation(mutations))scheduleDecorate();});
+    observer.observe(document.body,{childList:true,subtree:true});
   }
 
   window.GCSE_ADAPTIVE_HOMEWORK={preview:previewRecommendations,openManage,refresh:scheduleDecorate};
