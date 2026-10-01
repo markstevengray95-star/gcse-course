@@ -27,6 +27,8 @@ jobs:
           node --check real-exam-mocks.js
           node --check teacher-platform.js
           node --check teacher-dashboard-phase2.js
+          node --check teacher-homework.js
+          node --check teacher-homework-autoload.js
           node --check course-audit-fixes.js
       - name: Audit Supabase signup emails
         run: node tests/auth-email-integration-audit.mjs
@@ -40,6 +42,8 @@ jobs:
         run: node tests/teacher-platform-phase1-audit.mjs
       - name: Audit Teacher Platform phase 2
         run: node tests/teacher-platform-phase2-audit.mjs
+      - name: Audit Teacher homework phase 3
+        run: node tests/teacher-homework-phase3-audit.mjs
       - name: Audit plans and paper guide
         run: node tests/plans-paper-guide-audit.mjs
       - name: Audit subscription and admin controls
