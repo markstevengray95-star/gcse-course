@@ -55,7 +55,7 @@
   addScript('data-gcse-exam-revision-bridge','exam-studio-revision-bridge.js');
   addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>{
     addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js');
-    addScript('data-gcse-teacher-suite-script','teacher-suite-phases8-17.js');
+    addScript('data-gcse-teacher-suite-script','teacher-suite-phases8-17.js',()=>addScript('data-gcse-teacher-suite-live-enhancements','teacher-suite-live-enhancements.js'));
     addScript('data-gcse-teacher-homework-script','teacher-homework.js',()=>{
       addScript('data-gcse-teacher-adaptive-homework-script','teacher-adaptive-homework.js');
       addScript('data-gcse-teacher-homework-sync','teacher-homework-autoload.js');
