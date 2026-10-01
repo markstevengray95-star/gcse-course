@@ -18,7 +18,7 @@
   lessonKey=function(topicId,index){
     const topic=window.GCSE_COURSE_DATA.topics.find(t=>t.id===topicId);
     const entry=topic?visibleLessons(topic)[index]:null;
-    return entry?stableKey(topicId,entry[0]):`lesson:${topicId}:index:${index}`;
+    return entry?stableKey(topic.id,entry[0]):`lesson:${topicId}:index:${index}`;
   };
 
   window.GCSE_COURSE_AUDIT_FIXES={stableKey,lessonsForMode,migratedLegacyProgress:migrated};
@@ -43,11 +43,15 @@
   addStyle('data-gcse-real-exam-style','real-exam-mocks.css');
   addStyle('data-gcse-teacher-platform-style','teacher-platform.css');
   addStyle('data-gcse-teacher-dashboard-style','teacher-dashboard-phase2.css');
+  addStyle('data-gcse-teacher-homework-style','teacher-homework.css');
   addScript('data-gcse-billing-script','gcse-billing-ui.js');
   addScript('data-gcse-access-script','gcse-access-control.js');
   addScript('data-gcse-revision-intelligence-script','revision-intelligence.js',()=>addScript('data-gcse-real-exam-script','real-exam-mocks.js'));
   addScript('data-gcse-exam-revision-bridge','exam-studio-revision-bridge.js');
-  addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js'));
+  addScript('data-gcse-teacher-platform-script','teacher-platform.js',()=>{
+    addScript('data-gcse-teacher-dashboard-script','teacher-dashboard-phase2.js');
+    addScript('data-gcse-teacher-homework-script','teacher-homework.js');
+  });
 
   const loadCloudSync=()=>addScript('data-gcse-cloud-sync','gcse-cloud-sync.js');
   const loadAuth=()=>{
