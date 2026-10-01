@@ -34,7 +34,7 @@ contains(js, 'Re-test', 'teacher/student intervention UI reports re-test evidenc
 contains(js, 'not an official predicted grade', 'intervention progress is labelled as learning evidence rather than an official predicted grade');
 contains(js, "data-homework-start", 'intervention client intercepts ordinary homework start actions');
 contains(js, "data-homework-submit", 'intervention client intercepts ordinary homework submit actions');
-contains(js, 'capture:true', 'homework interception runs in capture phase before the ordinary submission handler');
+contains(js, "document.addEventListener('click',interceptHomework,true)", 'homework interception runs in capture phase before the ordinary submission handler');
 contains(css, '.gcse-intervention-teacher-card', 'teacher intervention cards are styled');
 contains(css, '.student-intervention-task', 'student intervention tasks are styled');
 
