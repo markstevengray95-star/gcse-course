@@ -29,6 +29,7 @@ jobs:
           node --check teacher-dashboard-phase2.js
           node --check teacher-homework.js
           node --check teacher-homework-autoload.js
+          node --check teacher-adaptive-homework.js
           node --check teacher-assessments.js
           node --check teacher-assessment-revision-bridge.js
           node --check teacher-assessment-analytics.js
@@ -54,6 +55,8 @@ jobs:
         run: node tests/teacher-assessment-phase5-audit.mjs
       - name: Audit Teacher intervention phase 6
         run: node tests/teacher-intervention-phase6-audit.mjs
+      - name: Audit Teacher adaptive homework phase 7
+        run: node tests/teacher-adaptive-homework-phase7-audit.mjs
       - name: Audit plans and paper guide
         run: node tests/plans-paper-guide-audit.mjs
       - name: Audit subscription and admin controls
