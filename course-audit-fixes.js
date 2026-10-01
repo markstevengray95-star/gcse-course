@@ -41,10 +41,12 @@
   addStyle('data-gcse-access-style','gcse-access-control.css');
   addStyle('data-gcse-revision-intelligence-style','revision-intelligence.css');
   addStyle('data-gcse-real-exam-style','real-exam-mocks.css');
+  addStyle('data-gcse-teacher-platform-style','teacher-platform.css');
   addScript('data-gcse-billing-script','gcse-billing-ui.js');
   addScript('data-gcse-access-script','gcse-access-control.js');
   addScript('data-gcse-revision-intelligence-script','revision-intelligence.js',()=>addScript('data-gcse-real-exam-script','real-exam-mocks.js'));
   addScript('data-gcse-exam-revision-bridge','exam-studio-revision-bridge.js');
+  addScript('data-gcse-teacher-platform-script','teacher-platform.js');
 
   const loadCloudSync=()=>addScript('data-gcse-cloud-sync','gcse-cloud-sync.js');
   const loadAuth=()=>{
