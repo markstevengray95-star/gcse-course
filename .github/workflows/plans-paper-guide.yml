@@ -36,6 +36,7 @@ jobs:
           node --check teacher-interventions.js
           node --check teacher-suite-phases8-17.js
           node --check teacher-suite-live-enhancements.js
+          node --check teacher-platform-audit-fixes.js
           node --check course-audit-fixes.js
       - name: Audit Supabase signup emails
         run: node tests/auth-email-integration-audit.mjs
@@ -61,6 +62,8 @@ jobs:
         run: node tests/teacher-adaptive-homework-phase7-audit.mjs
       - name: Audit Teacher Suite phases 8-17
         run: node tests/teacher-suite-phases8-17-audit.mjs
+      - name: Audit complete Teacher roadmap
+        run: node tests/teacher-platform-full-roadmap-audit.mjs
       - name: Audit plans and paper guide
         run: node tests/plans-paper-guide-audit.mjs
       - name: Audit subscription and admin controls
