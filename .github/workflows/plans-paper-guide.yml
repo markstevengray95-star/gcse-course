@@ -24,6 +24,7 @@ jobs:
           node --check gcse-access-control.js
           node --check revision-intelligence.js
           node --check exam-studio-revision-bridge.js
+          node --check real-exam-mocks.js
           node --check course-audit-fixes.js
       - name: Audit Supabase signup emails
         run: node tests/auth-email-integration-audit.mjs
@@ -31,6 +32,8 @@ jobs:
         run: node tests/access-control-audit.mjs
       - name: Audit smart revision features
         run: node tests/revision-intelligence-audit.mjs
+      - name: Audit full timed exam papers
+        run: node tests/real-exam-mocks-audit.mjs
       - name: Audit plans and paper guide
         run: node tests/plans-paper-guide-audit.mjs
       - name: Audit subscription and admin controls
